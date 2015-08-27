@@ -1,7 +1,11 @@
 language: python
 python:
-    - 2.7
+- 2.7
 install:
-    - pip install -r requirements.txt
+- pip install -r requirements.txt
 script:
-    - nosetests
+- nosetests
+deploy:
+  provider: heroku
+  api_key:
+    secure: SWWwN3AoDlk1x4DA0jhrH9Nw8DB0Jus1qC31RRhogcVuhOkuOUHv4pCfT3x8HacOki5eAAQLv/+XfMXuYkgxS9bJHYrh8HlX3ciMxhVg/7+C8IL1V7AILAN+BfzQSfzCJBnwYlaDhctPIvfZYJ1U7Yxl5Koei5qhQceguGdgFwAiXR83ujobavOUkRu/jNlnFeV+qh6t6SxM/x/iU/wZ7FXNPjvS8NAX2si54AMxyp+uPjzcco2gdaQ3Q8vX6/ZPo07gyyCiTNsGpS1GpaTjKh/msxIkUKMb2evPPTFSjkfHbkH9+VCnv6LhtZB8JYVDRxLi7QtssTVvxj0eCg9vyjcRdjLn0S73nWElBwbp51RaPXloWiA0txi/2wtah/rz3p5gotVqwFjtm1mHhMsZR5tBV5TOXLtKqlB8HR3Lkc5iZyaMLqGxAzwW2iRaFjATemLIut5foJ7tJzUJb7H0rUMLwgGRzmYjbbytclW/zDruIeu7bUsHTaTJMZF4X1YrwL0roCQMgJGPf3UV9xe09VLM8kou7Nh0cF+/qE66cw8JmNvhgaOxq9Z10esYGCb6Pqz5Zu/asQMn5+KWTuvX5Uwpva73bg7CBTBa8xMwv33rLXmahOB7vVcsb1dbV4H/J+qZVVfymLYVGUiWg0boc2XSwuO5lWzafgmz0l/kGbc=
