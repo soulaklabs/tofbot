@@ -7,15 +7,16 @@
 
 from toflib import Plugin
 
+
 class PluginRick(Plugin):
 
     def handle_msg(self, msg_text, chan, nick):
-        rick_list = ["okqEVeNqBhc"
-                    ,"XZ5TajZYW6Y"
-                    ,"dQw4w9WgXcQ"
-                    ]
+        rick_list = [
+                "okqEVeNqBhc",
+                "XZ5TajZYW6Y",
+                "dQw4w9WgXcQ"
+                ]
 
         for r in rick_list:
             if r in msg_text:
                 self.say("We're no strangers to love...")
-

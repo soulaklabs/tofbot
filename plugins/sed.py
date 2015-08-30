@@ -11,6 +11,7 @@ from toflib import Plugin
 import re
 import sre_constants
 
+
 class PluginSed(Plugin):
     "That's what she sed"
 

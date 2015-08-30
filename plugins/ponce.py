@@ -9,6 +9,7 @@
 from toflib import Plugin
 import random
 
+
 class PluginPonce(Plugin):
     "A plugin that asks the right questions"
 

@@ -11,6 +11,7 @@ This was implemented from the explanation on
 http://en.wikipedia.org/wiki/Naive_Bayes_classifier
 """
 
+
 def product(iterable):
     """
     Returns the product of the elements of an iterable
@@ -19,6 +20,7 @@ def product(iterable):
     for i in iterable:
         res *= i
     return res
+
 
 class StorageBackend:
     """
@@ -47,6 +49,7 @@ class StorageBackend:
         """
         raise NotImplementedError
 
+
 class SqliteBackend(StorageBackend):
     """
     Sqlite storage backend.
@@ -56,7 +59,9 @@ class SqliteBackend(StorageBackend):
         try:
             import sqlite3
         except ImportError:
-            raise ImportError, "You need sqlite3 to use this storage backend"
+            raise ImportError(
+                        "You need sqlite3 to use this storage backend"
+                    )
         import os.path
         if not os.path.exists(db_file):
             self.conn = sqlite3.connect(db_file)
@@ -102,7 +107,7 @@ class SqliteBackend(StorageBackend):
                 SELECT occurrences
                 FROM occurrences
                 WHERE class=? AND feature=?
-                """, (c ,f)
+                """, (c, f)
                 )
         l = list(cursor)
         if l:
@@ -116,6 +121,7 @@ class SqliteBackend(StorageBackend):
         res = [row[0] for row in cursor]
         cursor.close()
         return res
+
 
 class MemoryBackend(StorageBackend):
     """
@@ -138,6 +144,7 @@ class MemoryBackend(StorageBackend):
 
     def classes(self):
         return self.data.keys()
+
 
 class NaiveBayesClassifier:
     """
@@ -193,8 +200,8 @@ class NaiveBayesClassifier:
         """
         s = self.storage
         res = (float(s.nb_matches(c)) /
-                sum([s.nb_matches(i) for i in s.classes()]))
-        #print "P(%s) = %s" %(c, str(res))
+               sum([s.nb_matches(i) for i in s.classes()]))
+        # print "P(%s) = %s" %(c, str(res))
         return res
 
     def proba_f_given_c(self, c, f):
@@ -204,10 +211,10 @@ class NaiveBayesClassifier:
         s = self.storage
         cf_matches = s.nb_matches(c, f)
         if not cf_matches:
-            res = 1.0/sum([s.nb_matches(i) for i in s.classes()])
+            res = 1.0 / sum([s.nb_matches(i) for i in s.classes()])
         else:
-            res = float(cf_matches)/s.nb_matches(c)
-        #print "P(%s|%s) = %s" %(f, c, str(res))
+            res = float(cf_matches) / s.nb_matches(c)
+        # print "P(%s|%s) = %s" %(f, c, str(res))
         return res
 
     def classify(self, features):

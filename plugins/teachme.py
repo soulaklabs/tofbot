@@ -14,6 +14,7 @@ from toflib import distance
 from classifier import NaiveBayesClassifier, MemoryBackend
 import json
 
+
 class PluginTeachMe(Plugin):
 
     def __init__(self, *args):
@@ -69,4 +70,4 @@ class PluginTeachMe(Plugin):
             else:
                 if not just_joked:
                     self.classifier.train(self.last_msg.split(),
-                            self.get_what_to_learn())
+                                          self.get_what_to_learn())
