@@ -9,20 +9,22 @@
 
 from toflib import Plugin, InnocentHand
 
+
 class PluginEightBall(Plugin):
     "Magic 8 ball plugin"
 
     def __init__(self, bot):
         Plugin.__init__(self, bot)
-        balldata = [ "Essaye plus tard" , "Essaye encore" , "Pas d'avis"
-                   , "C'est ton destin" , "Le sort en est jeté"
-                   , "Une chance sur deux" , "Repose ta question"
-                   , "D'après moi oui" , "C'est certain" , "Oui absolument"
-                   , "Tu peux compter dessus" , "Sans aucun doute"
-                   , "Très probable" , "Oui" , "C'est bien parti"
-                   , "C'est non" , "Peu probable" , "Faut pas rêver"
-                   , "N'y compte pas" , "Impossible"
-                   ]
+        balldata = [
+                "Essaye plus tard", "Essaye encore", "Pas d'avis",
+                "C'est ton destin", "Le sort en est jeté",
+                "Une chance sur deux", "Repose ta question",
+                "D'après moi oui", "C'est certain", "Oui absolument",
+                "Tu peux compter dessus", "Sans aucun doute",
+                "Très probable", "Oui", "C'est bien parti",
+                "C'est non", "Peu probable", "Faut pas rêver",
+                "N'y compte pas", "Impossible"
+                ]
         self.ball = InnocentHand(balldata)
 
     def handle_msg(self, msg_text, _chan, _nick):
