@@ -14,6 +14,7 @@ import collections
 
 Mention = collections.namedtuple('Mention', "timestamp author msg pending")
 
+
 class PluginLag(Plugin):
     "Lag: time between a mention and the answer"
 
@@ -28,24 +29,23 @@ class PluginLag(Plugin):
         super(PluginLag, self).__init__(bot)
         self.data = {}
 
-
     def timeformat(self, t):
         "return a formatted time element without microseconds"
         return str(t).split(".")[0]
-
 
     def gc(self):
         "Limit memory usage"
         # don't watch more than 20 nicks
         while len(self.data) > 20:
-            least_active_nick = max(self.data.keys(),
-                    key=lambda x: self.data[x]["last_active"])
+            least_active_nick = max(
+                    self.data.keys(),
+                    key=lambda x: self.data[x]["last_active"]
+                    )
             del self.data[least_active_nick]
         # don' keep more than 5 mentions per nick
         for nick in self.data:
             while len(self.data[nick]["mentions"]) > 10:
                 del self.data[nick]["mentions"][0]
-
 
     def set_active(self, nick):
         "Update the last moment the nick was active"
@@ -60,11 +60,9 @@ class PluginLag(Plugin):
         self.data[nick]["last_active"] = datetime.datetime.now()
         self.gc()
 
-
     def on_join(self, chan, nick):
         "When a nick joins, mark it as active"
         self.set_active(nick)
-
 
     def add_mention(self, msg_text, author, to, pending=True):
         "Add a mention to the nick"
@@ -76,7 +74,6 @@ class PluginLag(Plugin):
             ))
         self.gc()
 
-
     def lag(self, nick):
         "Returns the time between now and the oldest pending mention"
         now = datetime.datetime.now()
@@ -84,7 +81,6 @@ class PluginLag(Plugin):
             if m.pending:
                 return now - m.timestamp
         return None
-
 
     def handle_msg(self, msg_text, _chan, me):
         "Process mentions and update previous lag"
@@ -114,7 +110,6 @@ class PluginLag(Plugin):
             for i in range(len(mentions)):
                 mentions[i] = mentions[i]._replace(pending=False)
 
-
     @cmd(1)
     def cmd_lag(self, chan, args):
         "Report the lag of the given nick"
@@ -123,12 +118,12 @@ class PluginLag(Plugin):
             lag = self.lag(who)
             if lag is not None:
                 self.say("Le %s-lag du moment est de %s." % (who,
-                    self.timeformat(lag)))
+                         self.timeformat(lag)))
             else:
                 previous_lag = self.data[who]["previous_lag"]
                 if previous_lag is not None:
                     self.say("Pas de lag pour %s (lag précédent: %s)." %
-                            (who, self.timeformat(previous_lag)))
+                             (who, self.timeformat(previous_lag)))
                 else:
                     self.say("Pas de lag pour %s." % who)
         else:
@@ -145,8 +140,9 @@ class PluginLag(Plugin):
                 for m in mentions:
                     status = "✗" if m.pending else "✓"
                     time.sleep(0.5)
-                    self.private(sender_nick, "[%s] %s <%s> %s" % (status,
-                        self.timeformat(m.timestamp), m.author, m.msg))
+                    self.private(sender_nick, "[%s] %s <%s> %s" % (
+                                 status, self.timeformat(m.timestamp),
+                                 m.author, m.msg))
             else:
                 self.private(sender_nick, "Pas de mentions pour %s." % who)
         else:
