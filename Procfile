@@ -1,1 +1,1 @@
-tofbot: python bot.py -x tofbot.conf
+tofbot: python bot.py -d -x tofbot.conf
