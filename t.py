@@ -1,5 +1,6 @@
 from testbot import TestTofbot, print_resp
 
+
 class Origin:
     pass
 
@@ -7,6 +8,7 @@ chan = '#test'
 
 origin = Origin()
 origin.sender = 'TestTofbot'
+
 
 class Counter:
 
@@ -19,8 +21,10 @@ class Counter:
         if self.remaining_calls < 0:
             assert False
 
+
 def cb_lines(n):
     return Counter(n)
+
 
 def cb_error(msg):
     return cb_lines(0)
