@@ -10,6 +10,7 @@
 from collections import deque
 from toflib import cmd, Plugin
 
+
 class PluginLike(Plugin):
 
     def __init__(self, bot):
@@ -47,4 +48,5 @@ class PluginLike(Plugin):
             return
         nick = max(self.scores, key=self.scores.get)
         score = self.scores[nick]
-        self.say("%s is the current Good Guy Greg with %d 'likes'" % (nick, score))
+        self.say("%s is the current Good Guy Greg with %d 'likes'" % (
+                 nick, score))

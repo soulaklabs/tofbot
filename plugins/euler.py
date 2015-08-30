@@ -8,6 +8,7 @@
 from toflib import cmd, Plugin, CronEvent
 import requests
 
+
 class EulerEvent(CronEvent):
     "Every default period, poll projecteuler.net"
 
@@ -25,6 +26,7 @@ class EulerEvent(CronEvent):
             if new_score != old_score:
                 self.plugin.say("%s : %s -> %s" % (nick, old_score, new_score))
         self.plugin.scores = new_scores
+
 
 class PluginEuler(Plugin):
     "A plugin to monitor projecteuler.net scores"
@@ -53,7 +55,7 @@ class PluginEuler(Plugin):
         "Display PE scores"
         self.scores = self.fetch_scores()
         for nick, score in self.scores.items():
-            self.say("%s : %s" %(nick, score))
+            self.say("%s : %s" % (nick, score))
 
     @cmd(1)
     def cmd_euler_add(self, _chan, args):
@@ -62,4 +64,3 @@ class PluginEuler(Plugin):
         self._euler_nicks.add(who)
         event = EulerEvent(self)
         self.bot.cron.schedule(event)
-
