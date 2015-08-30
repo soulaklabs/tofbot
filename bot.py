@@ -109,7 +109,7 @@ class Tofbot(Bot):
         plugindir = os.path.join(d, 'plugins')
         plugin_instances = {}
         for m in dir(plugins):
-            if type(getattr(plugins, m)) != types.ModuleType:
+            if isinstance(m, types.ModuleType):
                 continue
             plugin = getattr(plugins, m)
             for n in dir(plugin):
