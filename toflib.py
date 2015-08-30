@@ -22,10 +22,12 @@ _simple_dispatch = set()
 # those commands directly trigger confcmd_* actions
 _simple_conf_dispatch = set()
 
+
 def cmd(expected_args):
     def deco(func):
         name = func.__name__[4:]
         _simple_dispatch.add(name)
+
         def f(bot, chan, args, sender_nick='nobody'):
             if(len(args) == expected_args):
                 nb_args_func = len(inspect.getargspec(func)[0])
@@ -37,10 +39,12 @@ def cmd(expected_args):
         return f
     return deco
 
+
 def confcmd(expected_args):
     def deco(func):
         name = func.__name__[8:]
         _simple_conf_dispatch.add(name)
+
         def f(bot, chan, args, sender_nick='nobody'):
             if(len(args) == expected_args):
                 nb_args_func = len(inspect.getargspec(func)[0])
@@ -65,18 +69,18 @@ def distance(string1, string2):
     len2 = len(string2)
     for i in range(len1):
         dists[i, 0] = i
-    for j in range (len2):
+    for j in range(len2):
         dists[0, j] = j
     for j in range(1, len2):
         for i in range(1, len1):
             if string1[i] == string2[j]:
-                dists[i, j] = dists[i-1, j-1]
+                dists[i, j] = dists[i - 1, j - 1]
             else:
-                dists[i, j] = min(dists[i-1, j] + 1,
-                                  dists[i, j-1] + 1,
-                                  dists[i-1, j-1] + 1
-                                 )
-    return dists[len1-1, len2-1]
+                dists[i, j] = min(dists[i - 1, j] + 1,
+                                  dists[i, j - 1] + 1,
+                                  dists[i - 1, j - 1] + 1)
+    return dists[len1 - 1, len2 - 1]
+
 
 class RiddleTeller(object):
     """
@@ -107,11 +111,13 @@ class RiddleTeller(object):
             return True
         return False
 
+
 class InnocentHand(object):
     """
     A cute 6 years old girl, picking a random object
     from a given pool of candidates
     """
+
     def __init__(self, pool):
         """
         pool: list of candidates
@@ -123,6 +129,7 @@ class InnocentHand(object):
             return self.pool[index % len(self.pool)]
         random.seed()
         return random.choice(self.pool)
+
 
 class Plugin(object):
 
@@ -168,6 +175,7 @@ class Plugin(object):
     def on_kick(self, chan, reason):
         pass
 
+
 class CronEvent:
 
     def __init__(self, plugin):
@@ -178,12 +186,13 @@ class CronEvent:
     def fire(self):
         pass
 
+
 class Cron:
     def __init__(self):
         self.events = []
 
     def tick(self):
-        now = datetime.now ()
+        now = datetime.now()
         for ev in self.events:
             if now > ev.lastTick + ev.period:
                 ev.fire()
@@ -224,6 +233,7 @@ RE_URL = re.compile(
       )
     )
     """)
+
 
 def urls_in(text):
     return [m[0] for m in RE_URL.findall(text)]
