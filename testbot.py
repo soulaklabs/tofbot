@@ -9,7 +9,6 @@ from plugins.jokes import TofadeEvent
 from mock import patch
 import json
 
-
 TestOrigin = namedtuple('TestOrigin', ['sender', 'nick'])
 
 
@@ -18,7 +17,7 @@ def print_resp(msg):
 
 
 def twitter_set_tweet(name, tweet, tweet_id):
-    url = 'https://twitter.com/{screen_name}/status/{tweet_id}'\
+    url = 'https://twitter.com/{screen_name}/status/{tweet_id}' \
           .format(screen_name=name,
                   tweet_id=tweet_id)
     html = """
@@ -219,7 +218,7 @@ class TestCase(unittest.TestCase):
         If youtube returns an unparseable page, don't bail out.
         """
         url = 'https://www.youtube.com/watch?v=J---aiyznGQ'
-        HTTPretty.register_uri(HTTPretty.GET, url, body='',)
+        HTTPretty.register_uri(HTTPretty.GET, url, body='', )
         self.assertOutputLength("Check out %s" % url, 0)
 
     @httprettified
