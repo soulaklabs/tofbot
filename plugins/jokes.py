@@ -19,6 +19,7 @@ import random
 import time
 from datetime import timedelta
 
+
 class TofadeEvent(CronEvent):
 
     def __init__(self, plugin):
@@ -26,13 +27,13 @@ class TofadeEvent(CronEvent):
         self.period = timedelta(seconds=1)
 
     def fire(self):
-        if (random.randint(0, 100) > self.plugin.bot.autoTofadeThreshold and
-            (time.time() - self.plugin.lastTGtofbot) >= (self.plugin.bot.TGtime * 60)):
+        if self.plugin.tofade_time(has_context=False):
             self.plugin.say(self.plugin._tofades())
+
 
 class PluginJokes(Plugin):
 
-    def __init__ (self, bot):
+    def __init__(self, bot):
         Plugin.__init__(self, bot)
         self._chuck = InnocentHand(chuckNorrisFacts)
         self._tofades = InnocentHand(tofades)
@@ -78,7 +79,7 @@ class PluginJokes(Plugin):
             self.devinette = self.random_riddle(chan)
 
     def on_join(self, chan, nick):
-        if nick <> self.bot.nick:
+        if nick != self.bot.nick:
             self.cmd_tofme(chan, [nick])
 
     def handle_msg(self, msg_text, chan, nick):
@@ -88,7 +89,7 @@ class PluginJokes(Plugin):
         elif stripped == "gg " + self.bot.nick:
             self.lastTGtofbot = 0
         elif stripped.find(self.bot.nick, 1) >= 0 and self.tofade_time():
-            self.say(nick+": Ouais, c'est moi !")
+            self.say(nick + ": Ouais, c'est moi !")
         elif self.tofade_time(has_context=False):
             self.cmd_tofme(chan, [nick])
         if self.active_riddle():
@@ -96,17 +97,13 @@ class PluginJokes(Plugin):
             if itsOver:
                 self.devinette = None
 
-
-
     def active_riddle(self):
         return (hasattr(self, 'devinette') and self.devinette is not None)
 
     def random_riddle(self, chan):
         riddle = self._riddles()
-        r = RiddleTeller (riddle,
-                          chan,
-                          self.say,
-                          self.bot.riddleMaxDist)
+        r = RiddleTeller(riddle, chan, self.say,
+                         self.bot.riddleMaxDist)
         return r
 
     def on_kick(self, chan, reason):
