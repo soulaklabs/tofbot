@@ -16,10 +16,10 @@
 ./bot.py [options] [legacy-arguments]
 
 Legacy-arguments:
-  NICK CHANNEL [CHANNEL...]
+    NICK CHANNEL [CHANNEL...]
 
-  Don't prepend a # to chan names
-  Tofbot will connect to freenode.net
+    Don't prepend a # to chan names
+    Tofbot will connect to freenode.net
 """
 
 from datetime import datetime
@@ -55,6 +55,7 @@ import plugins.lag
 
 random.seed()
 
+
 class AutosaveEvent(CronEvent):
 
     def __init__(self, bot, filename):
@@ -65,17 +66,19 @@ class AutosaveEvent(CronEvent):
     def fire(self):
         self.bot.save(self.filename)
 
+
 class Tofbot(Bot):
 
     # Those attributes are published and can be changed by irc users
     # value is a str to object converter. It could do sanitization:
     # if value is incorrect, raise ValueError
     _mutable_attributes = {
-        "TGtime":int,
-        "memoryDepth":int
+        "TGtime": int,
+        "memoryDepth": int
     }
 
-    def __init__(self, nick=None, name=None, channels=None, password=None, debug=True):
+    def __init__(self, nick=None, name=None, channels=None, password=None,
+                 debug=True):
         Bot.__init__(self, nick, name, channels, password)
         self.joined = False
         self.autoTofadeThreshold = 98
@@ -92,21 +95,21 @@ class Tofbot(Bot):
         self.msgHandled = False
 
     def run(self, host=None):
-      if host == None and not hasattr(self,'host'):
-        raise Exception("run: no host set or given")
-      if self.nick == None:
-        raise Exception("run: no nick set")
-      if self.name == None:
-        raise Exception("run: no name set")
-      self.host = host or self.host
-      Bot.run(self, self.host)
+        if host is None and not hasattr(self, 'host'):
+            raise Exception("run: no host set or given")
+        if self.nick is None:
+            raise Exception("run: no nick set")
+        if self.name is None:
+            raise Exception("run: no name set")
+        self.host = host or self.host
+        Bot.run(self, self.host)
 
     def load_plugins(self):
         d = os.path.dirname(__file__)
         plugindir = os.path.join(d, 'plugins')
         plugin_instances = {}
         for m in dir(plugins):
-            if type(getattr(plugins,m)) != types.ModuleType:
+            if type(getattr(plugins, m)) != types.ModuleType:
                 continue
             plugin = getattr(plugins, m)
             for n in dir(plugin):
@@ -131,13 +134,11 @@ class Tofbot(Bot):
             print(msg)
 
     def try_join(self, args):
-        if (args[0] in ['End of /MOTD command.',
-                        "This server was created ... I don't know"]
-                        ):
+        if args[0] in ("End of /MOTD command.",
+                       "This server was created ... I don't know"):
             for chan in self.channels:
                 self.write(('JOIN', chan))
             self.joined = True
-
 
     def dispatch(self, origin, args):
         self.log("o=%s n=%s a=%s" % (origin.sender, origin.nick, args))
@@ -180,7 +181,7 @@ class Tofbot(Bot):
 
             self.pings[senderNick] = datetime.now()
 
-            if is_config == False:
+            if not is_config:
                 self.cron.tick()
 
                 if len(cmd) == 0:
@@ -209,16 +210,16 @@ class Tofbot(Bot):
 
             chan = None
             if len(self.channels) == 0:
-              chan = 'config'
+                chan = 'config'
             else:
-              chan = self.channels[0]
+                chan = self.channels[0]
 
             if cmd in _simple_dispatch:
                 act = self.find_cmd_action("cmd_" + cmd)
                 act(chan, msg[1:], senderNick)
             elif is_config and (cmd in _simple_conf_dispatch):
-              act = self.find_cmd_action("confcmd_" + cmd)
-              act(chan, msg[1:], senderNick)
+                act = self.find_cmd_action("confcmd_" + cmd)
+                act(chan, msg[1:], senderNick)
             elif cmd == 'context':
                 self.send_context(senderNick)
             elif cmd == 'help':
@@ -230,7 +231,7 @@ class Tofbot(Bot):
         elif commandType == 'ERROR':
             traceback.print_exc(file=sys.stdout)
 
-        else: # Unknown command type
+        else:  # Unknown command type
             self.log('Unknown command type : %s' % commandType)
 
     def find_cmd_action(self, cmd_name):
@@ -268,30 +269,30 @@ class Tofbot(Bot):
 
     @confcmd(1)
     def confcmd_chan(self, chan, args):
-      new_chan = args[0]
-      if self.channels.count(new_chan) == 0:
-        self.channels.append(new_chan)
+        new_chan = args[0]
+        if self.channels.count(new_chan) == 0:
+            self.channels.append(new_chan)
 
     @confcmd(1)
     def confcmd_server(self, chan, args):
-      host = args[0].strip()
-      self.host = host
+        host = args[0].strip()
+        self.host = host
 
     @confcmd(1)
     def confcmd_port(self, chan, args):
-      port = int(args[0].strip())
-      self.port = port
+        port = int(args[0].strip())
+        self.port = port
 
     @confcmd(1)
     def confcmd_nick(self, chan, args):
-      nick = args[0].strip()
-      self.nick = nick
-      self.user = nick
+        nick = args[0].strip()
+        self.nick = nick
+        self.user = nick
 
     @confcmd(1)
     def confcmd_name(self, chan, args):
-      name = args[0].strip()
-      self.name = name
+        name = args[0].strip()
+        self.name = name
 
     @confcmd(1)
     def confcmd_loadchanges(self, chan, args):
@@ -307,9 +308,11 @@ class Tofbot(Bot):
         "Find when X was last online"
         who = args[0]
         if who in self.pings:
-            self.msg(chan,
+            self.msg(
+                chan,
                 "Last message from %s was on %s (btw my local time is %s)" %
-                (who, self.pings[who].__str__(), datetime.now().__str__() ))
+                (who, self.pings[who].__str__(), datetime.now().__str__())
+            )
         else:
             self.msg(chan, "I havn't seen any message from " + who)
 
@@ -335,7 +338,8 @@ class Tofbot(Bot):
     def send_context(self, to):
         "Gives you last messages from the channel"
 
-        intro = "Last " + str(len(self.msgMemory)) + " messages sent on " + self.channels[0] + " :"
+        intro = "Derniers %s messages envoyés sur % :" % (
+                str(len(self.msgMemory)), self.channels[0])
         self.msg(to, intro)
 
         for msg in self.msgMemory:
@@ -345,16 +349,20 @@ class Tofbot(Bot):
         "Show this help message"
         maxlen = 1 + max(map(len, _simple_dispatch))
 
-        self.msg(to, "Commands should be entered in the channel or by private message")
+        self.msg(to, "Les commandes doivent être entrées dans le channel "
+                 "ou via message privé")
 
         self.msg(to, '%*s - %s' % (maxlen, "!help", self.send_help.__doc__))
-        self.msg(to, '%*s - %s' % (maxlen, "!context", self.send_context.__doc__))
+        self.msg(to, '%*s - %s' % (maxlen, "!context",
+                 self.send_context.__doc__))
 
         for cmd in _simple_dispatch:
             f = self.find_cmd_action("cmd_" + cmd)
-            self.msg(to, '%*s - %s' % (maxlen, "!"+cmd, f.__doc__))
-        self.msg(to, "you can also !get or !set " + ", ".join(self._mutable_attributes.keys()))
-        self.msg(to, "If random-tofades are boring you, enter 'TG " + self.nick + "' (but can be cancelled by GG " + self.nick + ")")
+            self.msg(to, '%*s - %s' % (maxlen, "!" + cmd, f.__doc__))
+        self.msg(to, "Vous pouvez aussi utiliser !get ou !set sur " +
+                 ", ".join(self._mutable_attributes.keys()))
+        self.msg(to, "Si les random-tofades vous ennuient, entrez 'TG " +
+                 self.nick + "' (Annulé par 'GG " + self.nick + "')")
 
     def load(self, filename):
         try:
@@ -374,9 +382,7 @@ class Tofbot(Bot):
     def save(self, filename):
         try:
             with open(filename, 'w') as f:
-                state = { 'version': 1
-                        , 'plugins': {}
-                        }
+                state = {'version': 1, 'plugins': {}}
                 for name, plugin in self.plugins.items():
                     plugin_state = plugin.save()
                     state['plugins'][name] = plugin_state
@@ -387,50 +393,58 @@ class Tofbot(Bot):
 
 def __main():
     class FakeOrigin:
-      pass
+        pass
 
     def bot_config(b, cmd):
-      o = FakeOrigin
-      o.sender = 'bot_config'
-      o.nick = 'bot_config'
-      b.dispatch(o, [cmd.strip(), 'BOTCONFIG','PRIVMSG','#bot_config'])
+        o = FakeOrigin
+        o.sender = 'bot_config'
+        o.nick = 'bot_config'
+        b.dispatch(o, [cmd.strip(), 'BOTCONFIG', 'PRIVMSG', '#bot_config'])
 
     # default timeout for urllib2, in seconds
     socket.setdefaulttimeout(15)
 
     # option parser
     parser = OptionParser(__doc__)
-    parser.add_option("-x","--execute", dest="cmds",action="append",help="File to execute prior connection. Can be used several times.")
-    parser.add_option("-s","--host", dest="host",help="IRC server hostname")
-    parser.add_option("-p","--port", dest="port",help="IRC server port")
-    parser.add_option("-k","--nick", dest="nick",help="Bot nickname",default='Tofbot')
-    parser.add_option("-n","--name", dest="name",help="Bot name",default='Tofbot')
-    parser.add_option("-c","--channel",dest="channel",action="append",help="Channel to join (without # prefix). Can be used several times.")
+    parser.add_option("-x", "--execute", dest="cmds", action="append",
+                      help="File to execute prior connection. "
+                           "Can be used several times.")
+    parser.add_option("-s", "--host", dest="host", help="IRC server hostname")
+    parser.add_option("-p", "--port", dest="port", help="IRC server port")
+    parser.add_option("-k", "--nick", dest="nick", help="Bot nickname",
+                      default='Tofbot')
+    parser.add_option("-n", "--name", dest="name", help="Bot name",
+                      default='Tofbot')
+    parser.add_option("-c", "--channel", dest="channel", action="append",
+                      help="Channel to join (without # prefix). "
+                           "Can be used several times.")
     parser.add_option("--password", dest="password")
-    parser.add_option("-d","--debug", action="store_true", dest="debug", default=False)
+    parser.add_option("-d", "--debug", action="store_true", dest="debug",
+                      default=False)
 
-    (options,args) = parser.parse_args();
+    (options, args) = parser.parse_args()
 
     # legacy arguments handled first
     # (new-style arguments prevail)
     if len(args) > 0:
-      options.nick = options.nick or args[0]
-      options.channel = options.channel or []
-      for chan in args[1:]:
-        if options.channel.count(chan) == 0:
-          options.channel.append(chan)
+        options.nick = options.nick or args[0]
+        options.channel = options.channel or []
+        for chan in args[1:]:
+            if options.channel.count(chan) == 0:
+                options.channel.append(chan)
 
     # initialize Tofbot
     # using command-line arguments
-    b = Tofbot(options.nick, options.name, options.channel, options.password, options.debug)
+    b = Tofbot(options.nick, options.name, options.channel,
+               options.password, options.debug)
 
     # execute command files
     # these commands may override command-line arguments
     options.cmds = options.cmds or []
     for filename in options.cmds:
-      cmdsfile = open(filename,'r')
-      for line in cmdsfile:
-        bot_config(b, line)
+        cmdsfile = open(filename, 'r')
+        for line in cmdsfile:
+            bot_config(b, line)
 
     # Restore serialized data
     state_file = "state.json"
@@ -448,8 +462,8 @@ def __main():
         print("Done !")
 
     # default host when legacy-mode
-    if options.host == None and len(options.cmds) == 0 and len(args) > 0:
-      options.host = 'irc.freenode.net'
+    if options.host is None and len(options.cmds) == 0 and len(args) > 0:
+        options.host = 'irc.freenode.net'
 
     b.run(options.host)
 
@@ -458,7 +472,7 @@ if __name__ == "__main__":
         __main()
     except Exception, ex:
         import traceback
-        dumpFile = open("_TOFDUMP.txt","w")
+        dumpFile = open("_TOFDUMP.txt", "w")
         traceback.print_exc(None, dumpFile)
         dumpFile.close()
         raise ex
