@@ -13,11 +13,13 @@ from datetime import datetime
 from toflib import cmd, Plugin
 import re
 
+
 def datetime_now():
     """
     A 'now' method that can be patched, unlike the builtin function.
     """
     return datetime.now()
+
 
 class TimeSlice():
     "An amount of time (1 hour) with an associated integer count"
@@ -30,17 +32,13 @@ class TimeSlice():
         self.count = 0
 
     def __str__(self):
-        return "%s %02dh-%02dh : %d lolz" % ( self.date.strftime("%d %b")
-                                            , self.hour
-                                            , self.hour+1 % 24
-                                            , self.count
-                                            )
-
+        return "%s %02dh-%02dh : %d lolz" % (self.date.strftime("%d %b"),
+                                             self.hour,
+                                             self.hour + 1 % 24,
+                                             self.count)
 
     def __cmp__(self, other):
-        return cmp ( (self.date, self.hour)
-                   , (other.date, other.hour)
-                   )
+        return cmp((self.date, self.hour), (other.date, other.hour))
 
     def __hash__(self):
         return hash(self.date) + hash(self.hour)
@@ -50,6 +48,7 @@ class TimeSlice():
         self.kevins.setdefault(nick, 0)
         self.kevins[nick] += count
         self.count += count
+
 
 class PluginLolrate(Plugin):
     "A plugin to compute number of lols and the current Kevin of the day."
@@ -107,16 +106,16 @@ class PluginLolrate(Plugin):
         if k is None:
             self.say("pas de Kevin")
         else:
-            kevin=k[0]
-            lolades=k[1]
+            kevin = k[0]
+            lolades = k[1]
             plural = ""
             if lolades > 1:
                 plural = "s"
             self.say("%s est le Kevin du moment avec %d lolade%s" %
-                        (kevin, lolades, plural))
+                     (kevin, lolades, plural))
 
     def on_kick(self, chan, reason):
         k = self.compute_kevin()
         if k is not None:
-            kevin=k[0]
+            kevin = k[0]
             self.say("Au passage, %s est un sacré Kevin" % kevin)
