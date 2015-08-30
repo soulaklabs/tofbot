@@ -16,7 +16,7 @@ import json
 
 def parse_tweet(url):
     r = requests.get(url)
-    s = BeautifulSoup(r.text)
+    s = BeautifulSoup(r.text, "html.parser")
     container = s.find('div', {'class': 'permalink-tweet'})
     if container is None:
         return None

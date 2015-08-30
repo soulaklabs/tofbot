@@ -13,14 +13,10 @@ import re
 
 from toflib import Plugin
 
-DOMAINS = [ "t.co/"
-          , "tinyurl.com/"
-          , "bit.ly/"
-          ]
+DOMAINS = ["t.co/", "tinyurl.com/", "bit.ly/"]
 
-VIDEO_DOMAINS = [ "youtube"
-                , "youtu.be"
-                ]
+VIDEO_DOMAINS = ["youtube", "youtu.be"]
+
 
 def is_mini(url):
     for d in DOMAINS:
@@ -28,22 +24,26 @@ def is_mini(url):
             return True
     return False
 
+
 def is_video(url):
     for d in VIDEO_DOMAINS:
         if d in url:
             return True
     return False
 
+
 def urlExpand(url):
     r = requests.get(url)
     return r.url
 
+
 def getTitle(url):
     r = requests.get(url)
     c = r.content
-    s = BeautifulSoup(c)
+    s = BeautifulSoup(c, "html.parser")
     t = s.html.head.title.string
     return ''.join(t.split("\n")).strip()
+
 
 class PluginExpand(Plugin):
 
