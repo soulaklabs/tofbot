@@ -19,31 +19,11 @@ from datetime import datetime, timedelta
 # those commands directly trigger cmd_* actions
 _simple_dispatch = set()
 
-# those commands directly trigger confcmd_* actions
-_simple_conf_dispatch = set()
-
 
 def cmd(expected_args):
     def deco(func):
         name = func.__name__[4:]
         _simple_dispatch.add(name)
-
-        def f(bot, chan, args, sender_nick='nobody'):
-            if(len(args) == expected_args):
-                nb_args_func = len(inspect.getargspec(func)[0])
-                if nb_args_func == 3:
-                    return func(bot, chan, args)
-                elif nb_args_func == 4:
-                    return func(bot, chan, args, sender_nick)
-        f.__doc__ = func.__doc__
-        return f
-    return deco
-
-
-def confcmd(expected_args):
-    def deco(func):
-        name = func.__name__[8:]
-        _simple_conf_dispatch.add(name)
 
         def f(bot, chan, args, sender_nick='nobody'):
             if(len(args) == expected_args):

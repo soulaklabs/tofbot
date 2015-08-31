@@ -30,8 +30,8 @@ import sys
 import os
 import plugins
 import types
+from toflib import _simple_dispatch, urls_in
 from toflib import *
-from toflib import _simple_dispatch, _simple_conf_dispatch, urls_in
 import re
 from optparse import OptionParser
 import json
@@ -93,16 +93,6 @@ class Tofbot(Bot):
         self.plugins = self.load_plugins()
         self.startMsgs = []
         self.msgHandled = False
-
-    def run(self, host=None):
-        if host is None and not hasattr(self, 'host'):
-            raise Exception("run: no host set or given")
-        if self.nick is None:
-            raise Exception("run: no nick set")
-        if self.name is None:
-            raise Exception("run: no name set")
-        self.host = host or self.host
-        Bot.run(self, self.host)
 
     def load_plugins(self):
         d = os.path.dirname(__file__)
@@ -217,9 +207,6 @@ class Tofbot(Bot):
             if cmd in _simple_dispatch:
                 act = self.find_cmd_action("cmd_" + cmd)
                 act(chan, msg[1:], senderNick)
-            elif is_config and (cmd in _simple_conf_dispatch):
-                act = self.find_cmd_action("confcmd_" + cmd)
-                act(chan, msg[1:], senderNick)
             elif cmd == 'context':
                 self.send_context(senderNick)
             elif cmd == 'help':
@@ -266,42 +253,6 @@ class Tofbot(Bot):
             return True
         except ValueError:
             pass
-
-    @confcmd(1)
-    def confcmd_chan(self, chan, args):
-        new_chan = args[0]
-        if self.channels.count(new_chan) == 0:
-            self.channels.append(new_chan)
-
-    @confcmd(1)
-    def confcmd_server(self, chan, args):
-        host = args[0].strip()
-        self.host = host
-
-    @confcmd(1)
-    def confcmd_port(self, chan, args):
-        port = int(args[0].strip())
-        self.port = port
-
-    @confcmd(1)
-    def confcmd_nick(self, chan, args):
-        nick = args[0].strip()
-        self.nick = nick
-        self.user = nick
-
-    @confcmd(1)
-    def confcmd_name(self, chan, args):
-        name = args[0].strip()
-        self.name = name
-
-    @confcmd(1)
-    def confcmd_loadchanges(self, chan, args):
-        filename = args[0].strip()
-        if not os.path.exists(filename):
-            return
-        with open(filename) as f:
-            changes = f.readlines()
-            self.startMsgs += changes
 
     @cmd(1)
     def cmd_ping(self, chan, args):
@@ -391,60 +342,16 @@ class Tofbot(Bot):
             print "Can't save state. Error: ", e
 
 
-def __main():
-    class FakeOrigin:
-        pass
+def run():
+    host = os.getenv("TOFBOT_SERVER", "irc.freenode.net")
+    port = int(os.getenv("TOFBOT_PORT", "6667"))
+    chan = os.getenv("TOFBOT_CHAN", "#soulakdev").split(",")
+    nick = os.getenv("TOFBOT_NICK", "tofbot")
+    password = os.getenv("TOFBOT_PASSWD", None)
+    name = os.getenv("TOFBOT_NAME", "tofbot")
+    debug = bool(os.getenv("TOFBOT_DEBUG", ""))
 
-    def bot_config(b, cmd):
-        o = FakeOrigin
-        o.sender = 'bot_config'
-        o.nick = 'bot_config'
-        b.dispatch(o, [cmd.strip(), 'BOTCONFIG', 'PRIVMSG', '#bot_config'])
-
-    # default timeout for urllib2, in seconds
-    socket.setdefaulttimeout(15)
-
-    # option parser
-    parser = OptionParser(__doc__)
-    parser.add_option("-x", "--execute", dest="cmds", action="append",
-                      help="File to execute prior connection. "
-                           "Can be used several times.")
-    parser.add_option("-s", "--host", dest="host", help="IRC server hostname")
-    parser.add_option("-p", "--port", dest="port", help="IRC server port")
-    parser.add_option("-k", "--nick", dest="nick", help="Bot nickname",
-                      default='Tofbot')
-    parser.add_option("-n", "--name", dest="name", help="Bot name",
-                      default='Tofbot')
-    parser.add_option("-c", "--channel", dest="channel", action="append",
-                      help="Channel to join (without # prefix). "
-                           "Can be used several times.")
-    parser.add_option("--password", dest="password")
-    parser.add_option("-d", "--debug", action="store_true", dest="debug",
-                      default=False)
-
-    (options, args) = parser.parse_args()
-
-    # legacy arguments handled first
-    # (new-style arguments prevail)
-    if len(args) > 0:
-        options.nick = options.nick or args[0]
-        options.channel = options.channel or []
-        for chan in args[1:]:
-            if options.channel.count(chan) == 0:
-                options.channel.append(chan)
-
-    # initialize Tofbot
-    # using command-line arguments
-    b = Tofbot(options.nick, options.name, options.channel,
-               options.password, options.debug)
-
-    # execute command files
-    # these commands may override command-line arguments
-    options.cmds = options.cmds or []
-    for filename in options.cmds:
-        cmdsfile = open(filename, 'r')
-        for line in cmdsfile:
-            bot_config(b, line)
+    b = Tofbot(nick, name, chan, password, debug)
 
     # Restore serialized data
     state_file = "state.json"
@@ -461,15 +368,11 @@ def __main():
         b.save(state_file)
         print("Done !")
 
-    # default host when legacy-mode
-    if options.host is None and len(options.cmds) == 0 and len(args) > 0:
-        options.host = 'irc.freenode.net'
-
-    b.run(options.host)
+    b.run(host, port)
 
 if __name__ == "__main__":
     try:
-        __main()
+        run()
     except Exception, ex:
         import traceback
         dumpFile = open("_TOFDUMP.txt", "w")

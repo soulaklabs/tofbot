@@ -3,15 +3,23 @@
 This is tofbot
 ==============
 
-configuration files in tofconfigs/
+Configure and run
+-----------------
 
-launch for a given configuration like this:
+The bot reads its configuration from the environment. Relevant variables:
 
-    python bot.py -x tofconfigs/localhost.conf
+    Variable        Default if unspecified  Comment
+    TOFBOT_SERVER   irc.freenode.net        -
+    TOFBOT_PORT     6667                    -
+    TOFBOT_CHAN     #soulakins              Accepts a comma separated list
+    TOFBOT_NICK     tofbot                  -
+    TOFBOT_PASSWD   -                       -
+    TOFBOT_NAME     tofbot                  -
+    TOFBOT_DEBUG    -                       -
 
-more help about command line arguments:
+Launch with
 
-    python bot.py -h
+    python bot.py
 
 Deployment
 ----------
