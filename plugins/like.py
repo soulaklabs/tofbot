@@ -15,38 +15,58 @@ class PluginLike(Plugin):
 
     def __init__(self, bot):
         Plugin.__init__(self, bot)
-        self.history = deque([], 2)
+        self.previous_speaker = None
         self.scores = {}
 
     def handle_msg(self, msg_text, chan, nick):
-        self.history.append(nick)
+        if not msg_text.strip().startswith("!"):
+            self.previous_speaker = nick
+
+    def give(self, n):
+        nick = self.previous_speaker
+        if nick not in self.scores:
+            self.scores[nick] = [0, 0]
+        self.scores[nick][0] += n
+        self.scores[nick][1] += 1
+        self.say(nick + ": " + "★" * n + "☆" * (5-n))
+
+    def avg_stars(self, nick):
+        if nick not in self.scores:
+            return None
+        return float(self.scores[nick][0])/self.scores[nick][1]
+
+    @cmd(1)
+    def cmd_starz(self, _chan, args, sender):
+        "Give starz to the chan's last speaker"
+        try:
+            n = min(max(int(args[0]), 0), 5)
+        except ValueError:
+            return
+        if sender != self.previous_speaker:
+            self.give(n)
 
     @cmd(0)
-    def cmd_like(self, _chan, _args):
-        "Give kudos to the chan's last speaker"
-        h = self.history
-        if len(h) == 2:
-            n = h[0]
-            if n not in self.scores:
-                self.scores[n] = 0
-            self.scores[n] += 1
+    def cmd_like(self, _chan, _args, sender):
+        "Alias for '!starz 4'"
+        if sender != self.previous_speaker:
+            self.give(4)
 
     @cmd(1)
     def cmd_score(self, _chan, args):
-        "Give someone's kudos count"
-        n = args[0]
-        if n not in self.scores:
-            self.say("%s n'est pas très populaire." % n)
+        "Give someone's starz average"
+        nick = args[0]
+        avg = self.avg_stars(nick)
+        if avg is None:
+            self.say("%s n'a pas de starz." % nick)
         else:
-            s = self.scores[n]
-            self.say("%d" % s)
+            self.say("%s: %.1f starz de moyenne." % (nick, avg))
 
     @cmd(0)
     def cmd_ggg(self, _chan, args):
         "Tell who is the current Good Guy Greg"
         if not self.scores:
             return
-        nick = max(self.scores, key=self.scores.get)
-        score = self.scores[nick]
-        self.say("%s is the current Good Guy Greg with %d 'likes'" % (
-                 nick, score))
+        nick = max(self.scores, key=self.avg_stars)
+        avg = self.avg_stars(nick)
+        self.say("%s est le Good Guy Greg du moment avec %.1f starz "
+                 "de moyenne" % (nick, avg))
