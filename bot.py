@@ -133,28 +133,19 @@ class Tofbot(Bot):
     def dispatch(self, origin, args):
         self.log("o=%s n=%s a=%s" % (origin.sender, origin.nick, args))
 
-        is_config = False
-        senderNick = origin.nick
+        sender_nick = origin.nick
         commandType = args[1]
 
-        # if command type is 'BOTCONFIG', bypass the try_join
-        # because we are configuring the bot before any
-        # connection.
-        if commandType != 'BOTCONFIG':
-            if not self.joined:
-                self.try_join(args)
-                return
-        else:
-            is_config = 1
-            args.remove('BOTCONFIG')
-            commandType = args[1]
+        if not self.joined:
+            self.try_join(args)
+            return
 
         if commandType == 'JOIN':
             for m in self.startMsgs:
                 self.msg(self.channels[0], m)
             self.startMsgs = []
             for p in self.plugins.values():
-                p.on_join(args[0], senderNick)
+                p.on_join(args[0], sender_nick)
 
         elif commandType == 'KICK' and args[3] == self.nick:
             reason = args[0]
@@ -165,33 +156,32 @@ class Tofbot(Bot):
 
         elif commandType == 'PRIVMSG':
             msg_text = args[0]
-            msg = msg_text.split(" ")
+            msg = msg_text.strip().split(" ")
             cmd = msg[0]
             chan = args[2]
 
-            self.pings[senderNick] = datetime.now()
+            self.pings[sender_nick] = datetime.now()
 
-            if not is_config:
-                self.cron.tick()
+            self.cron.tick()
 
-                if len(cmd) == 0:
-                    return
+            if len(cmd) == 0:
+                return
 
-                urls = urls_in(msg_text)
+            urls = urls_in(msg_text)
 
-                self.msgHandled = False
-                # We only allow one plugin to answer, so we trigger them
-                # in random order
-                for p in self.plugins.values():
-                    if not self.msgHandled:
-                        p.handle_msg(msg_text, chan, senderNick)
-                    for url in urls:
-                        p.on_url(url)
+            self.msgHandled = False
+            # We only allow one plugin to answer, so we trigger them
+            # in random order
+            for p in self.plugins.values():
+                if not self.msgHandled:
+                    p.handle_msg(msg_text, chan, sender_nick)
+                for url in urls:
+                    p.on_url(url)
 
-                if chan == self.channels[0] and cmd[0] != '!':
-                    self.msgMemory.append("<" + senderNick + "> " + msg_text)
-                    if len(self.msgMemory) > self.memoryDepth:
-                        del self.msgMemory[0]
+            if chan == self.channels[0] and cmd[0] != '!':
+                self.msgMemory.append("<" + sender_nick + "> " + msg_text)
+                if len(self.msgMemory) > self.memoryDepth:
+                    del self.msgMemory[0]
 
             if len(cmd) == 0 or cmd[0] != '!':
                 return
@@ -206,11 +196,11 @@ class Tofbot(Bot):
 
             if cmd in _simple_dispatch:
                 act = self.find_cmd_action("cmd_" + cmd)
-                act(chan, msg[1:], senderNick)
+                act(chan, msg[1:], sender_nick)
             elif cmd == 'context':
-                self.send_context(senderNick)
+                self.send_context(sender_nick)
             elif cmd == 'help':
-                self.send_help(senderNick)
+                self.send_help(sender_nick)
 
         elif commandType == 'PING':
             self.log('PING received in bot.py')
