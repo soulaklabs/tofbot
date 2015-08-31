@@ -289,7 +289,7 @@ class Tofbot(Bot):
     def send_context(self, to):
         "Gives you last messages from the channel"
 
-        intro = "Derniers %s messages envoyés sur % :" % (
+        intro = "Derniers %s messages envoyés sur %s :" % (
                 str(len(self.msgMemory)), self.channels[0])
         self.msg(to, intro)
 
