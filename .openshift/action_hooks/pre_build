@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cat ./requirements.txt | while read line; do
+    if echo $line | grep Test; then
+        break
+    fi
+    echo $line >> ./requirements-runtime.txt
+done
+mv ./requirements-runtime.txt ./requirements.txt
+

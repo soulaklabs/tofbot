@@ -1,8 +1,10 @@
+# Run dependencies
 beautifulsoup4
-coverage
 HTTPretty
-mock
-nose
 requests
 unidecode
+# Test dependencies
+mock
+nose
+coverage
 pep8
