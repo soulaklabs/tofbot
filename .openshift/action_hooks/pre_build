@@ -1,10 +1,12 @@
 #!/bin/bash
 
-cat ./requirements.txt | while read line; do
+APP_DIR=app-root/runtime/repo
+
+cat $APP_DIR/requirements.txt | while read line; do
     if echo $line | grep Test; then
         break
     fi
-    echo $line >> ./requirements-runtime.txt
+    echo $line >> $APP_DIR/requirements-runtime.txt
 done
-mv ./requirements-runtime.txt ./requirements.txt
+mv $APP_DIR/requirements-runtime.txt $APP_DIR/requirements.txt
 
