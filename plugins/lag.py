@@ -7,7 +7,7 @@
 # Copyright (c) 2015 Christophe-Marie Duquesne <chmd@chmd.fr>
 
 "See PluginLag"
-from toflib import Plugin, cmd
+from toflib import Plugin, cmd, distance
 import datetime
 import time
 import collections
@@ -110,40 +110,59 @@ class PluginLag(Plugin):
             for i in range(len(mentions)):
                 mentions[i] = mentions[i]._replace(pending=False)
 
+    def best_match(self, nick):
+        try:
+            return min(self.data.keys(), key=lambda x: distance(x, nick))
+        except ValueError:
+            return None
+
     @cmd(1)
     def cmd_lag(self, chan, args):
         "Report the lag of the given nick"
         who = args[0]
-        if who in self.data:
-            lag = self.lag(who)
-            if lag is not None:
-                self.say("Le %s-lag du moment est de %s." % (who,
-                         self.timeformat(lag)))
-            else:
-                previous_lag = self.data[who]["previous_lag"]
-                if previous_lag is not None:
-                    self.say("Pas de lag pour %s (lag précédent: %s)." %
-                             (who, self.timeformat(previous_lag)))
-                else:
-                    self.say("Pas de lag pour %s." % who)
+        if who not in self.data:
+            best = self.best_match(who)
+            if best is None:
+                self.say("Pas d'infos sur %s." % who)
+                return
+            self.say("Pas d'infos sur %s, mais je connais %s:" % (who,
+                     best))
+            who = best
+
+        lag = self.lag(who)
+        if lag is not None:
+            self.say("Le %s-lag du moment est de %s." % (who,
+                        self.timeformat(lag)))
         else:
-            self.say("Pas d'infos sur %s." % who)
+            previous_lag = self.data[who]["previous_lag"]
+            if previous_lag is not None:
+                self.say("Pas de lag pour %s (lag précédent: %s)." %
+                            (who, self.timeformat(previous_lag)))
+            else:
+                self.say("Pas de lag pour %s." % who)
 
     @cmd(1)
     def cmd_mentions(self, chan, args, sender_nick):
         "Report the recent mentions of the given nick"
         who = args[0]
-        if who in self.data:
-            mentions = self.data[who]["mentions"]
-            if len(mentions) > 0:
-                self.private(sender_nick, "Dernières mentions de %s:" % who)
-                for m in mentions:
-                    status = "✗" if m.pending else "✓"
-                    time.sleep(0.5)
-                    self.private(sender_nick, "[%s] %s <%s> %s" % (
-                                 status, self.timeformat(m.timestamp),
-                                 m.author, m.msg))
-            else:
-                self.private(sender_nick, "Pas de mentions pour %s." % who)
+        if who not in self.data:
+            best = self.best_match(who)
+            if best is None:
+                self.private(sender_nick, "Pas d'infos sur %s." % who)
+                return
+            self.private(sender_nick,
+                         "Pas d'infos sur %s, mais je connais %s:" % (who,
+                         best))
+            who = best
+
+        mentions = self.data[who]["mentions"]
+        if len(mentions) > 0:
+            self.private(sender_nick, "Dernières mentions de %s:" % who)
+            for m in mentions:
+                status = "✗" if m.pending else "✓"
+                time.sleep(0.5)
+                self.private(sender_nick, "[%s] %s <%s> %s" % (
+                                status, self.timeformat(m.timestamp),
+                                m.author, m.msg))
         else:
-            self.private(sender_nick, "Pas d'infos sur %s." % who)
+            self.private(sender_nick, "Pas de mentions pour %s." % who)
