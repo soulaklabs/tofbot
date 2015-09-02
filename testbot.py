@@ -100,7 +100,6 @@ class TestCase(unittest.TestCase):
         for cmd in cmds:
             bot_input(self.bot, cmd)
 
-
     def assertOutput(self, inp, outp):
         """
         Test that a given input produces a given output.
