@@ -132,12 +132,12 @@ class PluginLag(Plugin):
         lag = self.lag(who)
         if lag is not None:
             self.say("Le %s-lag du moment est de %s." % (who,
-                        self.timeformat(lag)))
+                     self.timeformat(lag)))
         else:
             previous_lag = self.data[who]["previous_lag"]
             if previous_lag is not None:
                 self.say("Pas de lag pour %s (lag précédent: %s)." %
-                            (who, self.timeformat(previous_lag)))
+                         (who, self.timeformat(previous_lag)))
             else:
                 self.say("Pas de lag pour %s." % who)
 
@@ -151,8 +151,8 @@ class PluginLag(Plugin):
                 self.private(sender_nick, "Pas d'infos sur %s." % who)
                 return
             self.private(sender_nick,
-                         "Pas d'infos sur %s, mais je connais %s:" % (who,
-                         best))
+                         "Pas d'infos sur %s, mais je connais %s:" %
+                         (who, best))
             who = best
 
         mentions = self.data[who]["mentions"]
