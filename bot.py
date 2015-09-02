@@ -93,6 +93,7 @@ class Tofbot(Bot):
         self.plugins = self.load_plugins()
         self.startMsgs = []
         self.msgHandled = False
+        self.names = set()
 
     def load_plugins(self):
         d = os.path.dirname(__file__)
@@ -131,30 +132,33 @@ class Tofbot(Bot):
             self.joined = True
 
     def dispatch(self, origin, args):
+        # Useful: https://www.alien.net.au/irc/irc2numerics.html
         self.log("o=%s n=%s a=%s" % (origin.sender, origin.nick, args))
 
         sender_nick = origin.nick
-        commandType = args[1]
+        command_type = args[1]
 
         if not self.joined:
             self.try_join(args)
             return
 
-        if commandType == 'JOIN':
+        if command_type == 'JOIN':
             for m in self.startMsgs:
                 self.msg(self.channels[0], m)
             self.startMsgs = []
             for p in self.plugins.values():
                 p.on_join(args[0], sender_nick)
 
-        elif commandType == 'KICK' and args[3] == self.nick:
+        elif command_type == 'KICK' and args[3] == self.nick:
             reason = args[0]
             chan = args[2]
             self.write(('JOIN', chan))
             for p in self.plugins.values():
                 p.on_kick(chan, reason)
 
-        elif commandType == 'PRIVMSG':
+        elif command_type == 'PRIVMSG':
+            if sender_nick != self.nick:
+                self.names.add(sender_nick)
             msg_text = args[0]
             msg = msg_text.strip().split(" ")
             cmd = msg[0]
@@ -202,14 +206,27 @@ class Tofbot(Bot):
             elif cmd == 'help':
                 self.send_help(sender_nick)
 
-        elif commandType == 'PING':
+        elif command_type == 'PING':
             self.log('PING received in bot.py')
 
-        elif commandType == 'ERROR':
+        elif command_type == 'ERROR':
             traceback.print_exc(file=sys.stdout)
 
+        elif command_type == 'QUIT' or command_type == 'PART':
+            try:
+                self.names.remove(sender_nick)
+            except KeyError:
+                pass
+
+        elif command_type == '353':
+            # Reply to NAMES
+            for nick in args[0].split(' '):
+                nick = nick.lstrip('@')
+                if nick != self.nick:
+                    self.names.add(nick)
+
         else:  # Unknown command type
-            self.log('Unknown command type : %s' % commandType)
+            self.log('Unknown command type : %s' % command_type)
 
     def find_cmd_action(self, cmd_name):
         targets = self.plugins.values()

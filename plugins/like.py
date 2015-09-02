@@ -18,6 +18,11 @@ class PluginLike(Plugin):
         self.previous_speaker = None
         self.scores = {}
 
+    def load(self, data):
+        for nick in self.bot.names:
+            if nick not in self.scores:
+                self.scores[nick] = [0, 0]
+
     def on_join(self, chan, nick):
         if nick not in self.scores:
             self.scores[nick] = [0, 0]
