@@ -330,6 +330,11 @@ class TestCase(unittest.TestCase):
         l = bot_kick(self.bot)
         self.assertIn('Au passage, michel est un sacré Kevin', l)
 
+    def test_ponce(self):
+        del self.bot.plugins["jokes"]
+        self.bot.send("!set autoTofadeThreshold 0")
+        self.assertOutput("elle a les yeux revolver", "C'est ta meuf?")
+
     @httprettified
     def test_twitter_expand(self):
         tweet_id = 1122334455667788
