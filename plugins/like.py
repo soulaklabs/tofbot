@@ -18,11 +18,6 @@ class PluginLike(Plugin):
         self.previous_speaker = None
         self.scores = {}
 
-    def load(self, data):
-        for nick in self.bot.names:
-            if nick not in self.scores:
-                self.scores[nick] = [0, 0]
-
     def on_join(self, chan, nick):
         if nick not in self.scores:
             self.scores[nick] = [0, 0]
@@ -45,14 +40,17 @@ class PluginLike(Plugin):
             return None
         return float(self.scores[nick][0])/self.scores[nick][1]
 
-    @cmd(2)
+    @cmd(1, 2)
     def cmd_starz(self, _chan, args, sender):
         "Give starz to someone"
         try:
             n = min(max(int(args[0]), 0), 5)
         except ValueError:
             return
-        nick = args[1]
+        if len(args) == 2:
+            nick = args[1]
+        else:
+            nick = self.previous_speaker
         if sender != nick:
             self.give(n, nick)
 

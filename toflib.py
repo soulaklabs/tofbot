@@ -126,9 +126,6 @@ class Plugin(object):
     def private(self, to, msg):
         self.bot.msg(to, msg)
 
-    def names(self):
-        return list(self.bot.names)
-
     def tofade_time(self, has_context=True):
         "Is it a good time for a tofade"
         threshold = self.bot.autoTofadeThreshold
@@ -150,6 +147,12 @@ class Plugin(object):
         pass
 
     def on_join(self, chan, nick):
+        pass
+
+    def on_leave(self, chan, nick):
+        pass
+
+    def on_quit(self, nick):
         pass
 
     def handle_msg(self, text, chan, nick):

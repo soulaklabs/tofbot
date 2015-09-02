@@ -94,7 +94,6 @@ class Tofbot(Bot):
         self.plugins = self.load_plugins()
         self.startMsgs = []
         self.msgHandled = False
-        self.names = set()
 
     def load_plugins(self):
         d = os.path.dirname(__file__)
@@ -158,8 +157,6 @@ class Tofbot(Bot):
                 p.on_kick(chan, reason)
 
         elif command_type == 'PRIVMSG':
-            if sender_nick != self.nick:
-                self.names.add(sender_nick)
             msg_text = args[0]
             msg = msg_text.strip().split(" ")
             cmd = msg[0]
@@ -213,18 +210,26 @@ class Tofbot(Bot):
         elif command_type == 'ERROR':
             traceback.print_exc(file=sys.stdout)
 
-        elif command_type == 'QUIT' or command_type == 'PART':
-            try:
-                self.names.remove(sender_nick)
-            except KeyError:
-                pass
+        elif command_type == 'PART':
+            chan = args[2]
+            for p in self.plugins.values():
+                p.on_leave(chan, sender_nick)
+
+        elif command_type == 'QUIT':
+            for p in self.plugins.values():
+                p.on_leave(sender_nick)
 
         elif command_type == '353':
             # Reply to NAMES
+            names = set()
             for nick in args[0].split(' '):
                 nick = nick.lstrip('@')
                 if nick != self.nick:
-                    self.names.add(nick)
+                    names.add(nick)
+            for n in names:
+                for p in self.plugins:
+                    if p != "jokes":
+                        self.plugins[p].on_join(args[-1], n)
 
         else:  # Unknown command type
             self.log('Unknown command type : %s' % command_type)
