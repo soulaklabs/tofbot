@@ -22,8 +22,7 @@ class PluginLike(Plugin):
         if not msg_text.strip().startswith("!"):
             self.previous_speaker = nick
 
-    def give(self, n):
-        nick = self.previous_speaker
+    def give(self, n, nick):
         if nick not in self.scores:
             self.scores[nick] = [0, 0]
         self.scores[nick][0] += n
@@ -42,14 +41,16 @@ class PluginLike(Plugin):
             n = min(max(int(args[0]), 0), 5)
         except ValueError:
             return
+        nick = args[1]
         if sender != self.previous_speaker:
-            self.give(n)
+            self.give(n, nick)
 
     @cmd(0)
     def cmd_like(self, _chan, _args, sender):
         "Alias for '!starz 4'"
         if sender != self.previous_speaker:
-            self.give(4)
+            if self.previous_speaker is not None:
+                self.give(4, self.previous_speaker)
 
     @cmd(1)
     def cmd_score(self, _chan, args):
