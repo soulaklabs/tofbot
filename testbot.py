@@ -95,12 +95,11 @@ class TestCase(unittest.TestCase):
         chan = "#chan"
         self.origin = TestOrigin('sender', 'nick')
         self.bot = TestTofbot(nick, name, chan, self.origin)
+        self.bot.joined = True
         cmds = ['!set autoTofadeThreshold 100']
         for cmd in cmds:
-            self.bot.dispatch(self.origin,
-                              [cmd, 'BOTCONFIG', 'PRIVMSG', '#config'])
+            bot_input(self.bot, cmd)
 
-        self.bot.joined = True
 
     def assertOutput(self, inp, outp):
         """
