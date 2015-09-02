@@ -90,6 +90,7 @@ class Tofbot(Bot):
         self.lolRateDepth = 8
         self.msgMemory = []
         self.cron = Cron()
+        self.lastTGtofbot = 0
         self.plugins = self.load_plugins()
         self.startMsgs = []
         self.msgHandled = False

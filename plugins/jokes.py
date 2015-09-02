@@ -40,7 +40,6 @@ class PluginJokes(Plugin):
         self._riddles = InnocentHand(riddles)
         self._fortunes = InnocentHand(fortunes)
         self._contrepeteries = InnocentHand(contrepeteries)
-        self.lastTGtofbot = 0
         bot._mutable_attributes["autoTofadeThreshold"] = int
         bot._mutable_attributes["riddleMaxDist"] = int
         ev = TofadeEvent(self)
@@ -85,9 +84,9 @@ class PluginJokes(Plugin):
     def handle_msg(self, msg_text, chan, nick):
         stripped = msg_text.strip().lower()
         if stripped == "tg " + self.bot.nick:
-            self.lastTGtofbot = time.time()
+            self.bot.lastTGtofbot = time.time()
         elif stripped == "gg " + self.bot.nick:
-            self.lastTGtofbot = 0
+            self.bot.lastTGtofbot = 0
         elif stripped.find(self.bot.nick, 1) >= 0 and self.tofade_time():
             self.say(nick + ": Ouais, c'est moi !")
         elif self.tofade_time(has_context=False):

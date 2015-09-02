@@ -20,13 +20,15 @@ from datetime import datetime, timedelta
 _simple_dispatch = set()
 
 
-def cmd(expected_args):
+def cmd(nargs_min, nargs_max=None):
+    if nargs_max is None:
+        nargs_max = nargs_min
     def deco(func):
         name = func.__name__[4:]
         _simple_dispatch.add(name)
 
         def f(bot, chan, args, sender_nick='nobody'):
-            if(len(args) == expected_args):
+            if nargs_min <= len(args) <= nargs_max:
                 nb_args_func = len(inspect.getargspec(func)[0])
                 if nb_args_func == 3:
                     return func(bot, chan, args)
@@ -123,16 +125,16 @@ class Plugin(object):
     def private(self, to, msg):
         self.bot.msg(to, msg)
 
+    def names(self):
+       return list(self.bot.names)
+
     def tofade_time(self, has_context=True):
         "Is it a good time for a tofade"
         threshold = self.bot.autoTofadeThreshold
         if has_context:
             threshold = threshold / 2
-        lastTGtofbot = 0
-        jokes = self.bot.plugins.get("jokes", None)
-        if jokes is not None:
-            lastTGtofbot = jokes.lastTGtofbot
-        return (time.time() - lastTGtofbot >= self.bot.TGtime * 60 and
+        return (time.time() - self.bot.lastTGtofbot >=
+                self.bot.TGtime * 60 and
                 random.randint(0, 100) > threshold)
 
     def load(self, data):
