@@ -18,19 +18,25 @@ class PluginLike(Plugin):
         self.previous_speaker = None
         self.scores = {}
 
+    def on_join(self, chan, nick):
+        if nick not in self.scores:
+            self.scores[nick] = [0, 0]
+
     def handle_msg(self, msg_text, chan, nick):
         if not msg_text.strip().startswith("!"):
             self.previous_speaker = nick
+        if nick not in self.scores:
+            self.scores[nick] = [0, 0]
 
     def give(self, n, nick):
         if nick not in self.scores:
-            self.scores[nick] = [0, 0]
+            return
         self.scores[nick][0] += n
         self.scores[nick][1] += 1
         self.say(nick + ": " + "★" * n + "☆" * (5-n))
 
     def avg_stars(self, nick):
-        if nick not in self.scores:
+        if nick not in self.scores or self.scores[nick][1] == 0:
             return None
         return float(self.scores[nick][0])/self.scores[nick][1]
 
@@ -42,12 +48,12 @@ class PluginLike(Plugin):
         except ValueError:
             return
         nick = args[1]
-        if sender != self.previous_speaker:
+        if sender != nick:
             self.give(n, nick)
 
     @cmd(0)
     def cmd_like(self, _chan, _args, sender):
-        "Alias for '!starz 4'"
+        "Alias for '!starz 4 <previous speaker>'"
         if sender != self.previous_speaker:
             if self.previous_speaker is not None:
                 self.give(4, self.previous_speaker)
@@ -69,5 +75,6 @@ class PluginLike(Plugin):
             return
         nick = max(self.scores, key=self.avg_stars)
         avg = self.avg_stars(nick)
-        self.say("%s est le Good Guy Greg du moment avec %.1f starz "
-                 "de moyenne" % (nick, avg))
+        if avg is not None:
+            self.say("%s est le Good Guy Greg du moment avec %.1f starz "
+                     "de moyenne" % (nick, avg))
