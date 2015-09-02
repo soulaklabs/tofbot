@@ -23,6 +23,7 @@ _simple_dispatch = set()
 def cmd(nargs_min, nargs_max=None):
     if nargs_max is None:
         nargs_max = nargs_min
+
     def deco(func):
         name = func.__name__[4:]
         _simple_dispatch.add(name)
@@ -126,7 +127,7 @@ class Plugin(object):
         self.bot.msg(to, msg)
 
     def names(self):
-       return list(self.bot.names)
+        return list(self.bot.names)
 
     def tofade_time(self, has_context=True):
         "Is it a good time for a tofade"
