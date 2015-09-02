@@ -34,9 +34,9 @@ class PluginLike(Plugin):
             return None
         return float(self.scores[nick][0])/self.scores[nick][1]
 
-    @cmd(1)
+    @cmd(2)
     def cmd_starz(self, _chan, args, sender):
-        "Give starz to the chan's last speaker"
+        "Give starz to someone"
         try:
             n = min(max(int(args[0]), 0), 5)
         except ValueError:
