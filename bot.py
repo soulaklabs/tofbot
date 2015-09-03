@@ -256,7 +256,7 @@ class Tofbot(Bot):
             print "Can't save state. Error: ", e
 
 
-def run():
+def main():
     host = os.getenv("TOFBOT_SERVER", "irc.freenode.net")
     port = int(os.getenv("TOFBOT_PORT", "6667"))
     chan = os.getenv("TOFBOT_CHAN", "#soulakdev").split(",")
@@ -285,11 +285,4 @@ def run():
     b.run(host, port)
 
 if __name__ == "__main__":
-    try:
-        run()
-    except Exception, ex:
-        import traceback
-        dumpFile = open("_TOFDUMP.txt", "w")
-        traceback.print_exc(None, dumpFile)
-        dumpFile.close()
-        raise ex
+    main()
