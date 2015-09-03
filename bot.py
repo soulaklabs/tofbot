@@ -87,7 +87,6 @@ class Tofbot(Bot):
         self.cron = Cron()
         self.lastTGtofbot = 0
         self.plugins = self.load_plugins()
-        self.msgHandled = False
 
     def load_plugins(self):
         d = os.path.dirname(__file__)
@@ -110,7 +109,6 @@ class Tofbot(Bot):
 
     # line-feed-safe
     def msg(self, chan, msg):
-        self.msgHandled = True
         for m in msg.split("\n"):
             Bot.msg(self, chan, m)
 
@@ -160,12 +158,8 @@ class Tofbot(Bot):
 
             urls = urls_in(msg_text)
 
-            self.msgHandled = False
-            # We only allow one plugin to answer, so we trigger them
-            # in random order
             for p in self.plugins.values():
-                if not self.msgHandled:
-                    p.handle_msg(msg_text, chan, sender_nick)
+                p.handle_msg(msg_text, chan, sender_nick)
                 for url in urls:
                     p.on_url(url)
 
@@ -194,13 +188,10 @@ class Tofbot(Bot):
             for p in self.plugins.values():
                 p.on_leave(sender_nick)
 
-        elif command_type == '353':
-            # Reply to NAMES
-            names = set()
-            for nick in args[0].split(' '):
-                nick = nick.lstrip('@')
-                if nick != self.nick:
-                    names.add(nick)
+        elif command_type == '353': # Reply to NAMES
+            names = set([n.lstrip('@') for n in args[0].split(' ')
+                         if n.lstrip('@') != self.nick])
+            # act like if everybody just joined
             for n in names:
                 for p in self.plugins:
                     if p != "jokes":
