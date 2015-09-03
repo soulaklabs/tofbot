@@ -13,13 +13,10 @@
 #                    Christophe-Marie Duquesne <chm.duquesne@gmail.com>
 
 """
-./bot.py [options] [legacy-arguments]
+Usage: ./bot.py
 
-Legacy-arguments:
-    NICK CHANNEL [CHANNEL...]
-
-    Don't prepend a # to chan names
-    Tofbot will connect to freenode.net
+This bot is entirely configured by environment variables. See README.md
+for an exaustive list.
 """
 
 from irc import Bot
