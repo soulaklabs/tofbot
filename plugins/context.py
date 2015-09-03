@@ -16,13 +16,12 @@ class PluginContext(Plugin):
     def __init__(self, bot):
         super(PluginContext, self).__init__(bot)
         self.msgMemory = []
-        self.memoryDepth = 20
 
     def handle_msg(self, msg_text, chan, nick):
         is_cmd = msg_text.strip().startswith('!')
         if chan == self.bot.channels[0] and not is_cmd:
             self.msgMemory.append("<" + nick + "> " + msg_text)
-            if len(self.msgMemory) > self.memoryDepth:
+            if len(self.msgMemory) > self.bot.memoryDepth:
                 del self.msgMemory[0]
 
     @cmd(0)

@@ -83,6 +83,7 @@ class Tofbot(Bot):
         self.lolRateDepth = 8
         self.cron = Cron()
         self.lastTGtofbot = 0
+        self.memoryDepth = 20
         self.plugins = self.load_plugins()
 
     def load_plugins(self):
@@ -143,32 +144,30 @@ class Tofbot(Bot):
                 p.on_kick(chan, reason)
 
         elif command_type == 'PRIVMSG':
-            msg_text = args[0]
-            msg = msg_text.strip().split(" ")
-            cmd = msg[0]
-            chan = args[2]
-
             self.cron.tick()
 
-            if len(cmd) == 0:
-                return
-
+            msg_text = args[0]
+            chan = args[2]
             urls = urls_in(msg_text)
 
+            # filter empty messages
+            if len(msg_text.strip()) == 0:
+                return
+
+            # dispatch to plugins
             for p in self.plugins.values():
                 p.handle_msg(msg_text, chan, sender_nick)
                 for url in urls:
                     p.on_url(url)
 
-            if len(cmd) == 0 or cmd[0] != '!':
-                return
-
-            cmd = cmd[1:]
-            chan = self.channels[0]
-
-            if cmd in _simple_dispatch:
-                act = self.find_cmd_action("cmd_" + cmd)
-                act(chan, msg[1:], sender_nick)
+            # dispatch commands
+            if msg_text.strip().startswith("!"):
+                tokens = msg_text.strip().split(" ")
+                cmd = tokens[0][1:]
+                chan = self.channels[0]
+                if cmd in _simple_dispatch:
+                    act = self.find_cmd_action("cmd_" + cmd)
+                    act(chan, tokens[1:], sender_nick)
 
         elif command_type == 'PING':
             self.log('PING received in bot.py')
