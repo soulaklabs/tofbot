@@ -29,6 +29,6 @@ class PluginHelp(Plugin):
             f = self.bot.find_cmd_action("cmd_" + cmd)
             self.private(to, '%*s - %s' % (maxlen, "!" + cmd, f.__doc__))
         self.private(to, "Vous pouvez aussi utiliser !get ou !set sur " +
-                 ", ".join(self.bot._mutable_attributes.keys()))
+                     ", ".join(self.bot._mutable_attributes.keys()))
         self.private(to, "Si les random-tofades vous ennuient, entrez 'TG " +
-                 bot_nick + "' (Annulé par 'GG " + bot_nick + "')")
+                     bot_nick + "' (Annulé par 'GG " + bot_nick + "')")
