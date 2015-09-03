@@ -51,14 +51,14 @@ class PluginEuler(Plugin):
         return scores
 
     @cmd(0)
-    def cmd_euler(self, _chan, _args):
+    def cmd_euler(self, _chan, _args, _sender_nick):
         "Display PE scores"
         self.scores = self.fetch_scores()
         for nick, score in self.scores.items():
             self.say("%s : %s" % (nick, score))
 
     @cmd(1)
-    def cmd_euler_add(self, _chan, args):
+    def cmd_euler_add(self, _chan, args, _sender_nick):
         "Add a PE account"
         who = args[0]
         self._euler_nicks.add(who)

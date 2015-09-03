@@ -46,33 +46,33 @@ class PluginJokes(Plugin):
         self.bot.cron.schedule(ev)
 
     @cmd(0)
-    def cmd_fortune(self, chan, args):
+    def cmd_fortune(self, chan, args, sender_nick):
         "Tell great philosophy"
         self.say(self._fortunes())
 
     @cmd(0)
-    def cmd_chuck(self, chan, args):
+    def cmd_chuck(self, chan, args, sender_nick):
         "Tell a Chuck Norris fact"
         self.say(self._chuck())
 
     @cmd(0)
-    def cmd_tofade(self, chan, args):
+    def cmd_tofade(self, chan, args, sender_nick):
         "Tof randomly"
         self.say(self._tofades())
 
     @cmd(0)
-    def cmd_contrepeterie(self, chan, args):
+    def cmd_contrepeterie(self, chan, args, sender_nick):
         "Tell a contrepeterie"
         self.say(self._contrepeteries())
 
     @cmd(1)
-    def cmd_tofme(self, chan, args):
+    def cmd_tofme(self, chan, args, sender_nick):
         "Tof to someone (give a nickname)"
         who = args[0]
         self.say("%s : %s" % (who, self._tofades()))
 
     @cmd(0)
-    def cmd_devinette(self, chan, args):
+    def cmd_devinette(self, chan, args, sender_nick):
         "Riddle teller"
         if not self.active_riddle():
             self.devinette = self.random_riddle(chan)

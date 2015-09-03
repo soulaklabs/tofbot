@@ -7,7 +7,7 @@
 #                    Christophe-Marie Duquesne <chm.duquesne@gmail.com>
 
 "See PluginTwitter"
-from toflib import cmd, Plugin, CronEvent
+from toflib import Plugin, CronEvent
 from bs4 import BeautifulSoup
 import re
 import requests

@@ -118,7 +118,7 @@ class PluginLag(Plugin):
             return None
 
     @cmd(1)
-    def cmd_lag(self, chan, args):
+    def cmd_lag(self, chan, args, sender_nick):
         "Report the lag of the given nick"
         who = args[0]
         if who not in self.data:

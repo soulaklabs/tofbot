@@ -76,7 +76,7 @@ class PluginLolrate(Plugin):
             self.lol_rate[0].lol(nick, lulz)
 
     @cmd(0)
-    def cmd_lulz(self, _chan, _args):
+    def cmd_lulz(self, _chan, _args, _sender_nick):
         "Display the number of lulz in the previous hours"
         for lolade in self.lol_rate:
             if lolade.count:
@@ -100,7 +100,7 @@ class PluginLolrate(Plugin):
             return None
 
     @cmd(0)
-    def cmd_kevin(self, _chan, _args):
+    def cmd_kevin(self, _chan, _args, _sender_nick):
         "Display the nick with the most lulz"
         k = self.compute_kevin()
         if k is None:

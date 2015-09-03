@@ -13,7 +13,6 @@ import random
 import re
 import unidecode
 import time
-import inspect
 from datetime import datetime, timedelta
 
 # those commands directly trigger cmd_* actions
@@ -30,11 +29,7 @@ def cmd(nargs_min, nargs_max=None):
 
         def f(bot, chan, args, sender_nick='nobody'):
             if nargs_min <= len(args) <= nargs_max:
-                nb_args_func = len(inspect.getargspec(func)[0])
-                if nb_args_func == 3:
-                    return func(bot, chan, args)
-                elif nb_args_func == 4:
-                    return func(bot, chan, args, sender_nick)
+                return func(bot, chan, args, sender_nick)
         f.__doc__ = func.__doc__
         return f
     return deco

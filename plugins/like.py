@@ -41,7 +41,7 @@ class PluginLike(Plugin):
         return float(self.scores[nick][0])/self.scores[nick][1]
 
     @cmd(1, 2)
-    def cmd_starz(self, _chan, args, sender):
+    def cmd_starz(self, _chan, args, sender_nick):
         "Give starz to someone"
         try:
             n = min(max(int(args[0]), 0), 5)
@@ -51,18 +51,18 @@ class PluginLike(Plugin):
             nick = args[1]
         else:
             nick = self.previous_speaker
-        if sender != nick:
+        if sender_nick != nick:
             self.give(n, nick)
 
     @cmd(0)
-    def cmd_like(self, _chan, _args, sender):
+    def cmd_like(self, _chan, _args, sender_nick):
         "Alias for '!starz 4 <previous speaker>'"
-        if sender != self.previous_speaker:
+        if sender_nick != self.previous_speaker:
             if self.previous_speaker is not None:
                 self.give(4, self.previous_speaker)
 
     @cmd(1)
-    def cmd_score(self, _chan, args):
+    def cmd_score(self, _chan, args, _sender_nick):
         "Give someone's starz average"
         nick = args[0]
         avg = self.avg_stars(nick)
@@ -72,7 +72,7 @@ class PluginLike(Plugin):
             self.say("%s: %.1f starz de moyenne." % (nick, avg))
 
     @cmd(0)
-    def cmd_ggg(self, _chan, args):
+    def cmd_ggg(self, _chan, args, _sender_nick):
         "Tell who is the current Good Guy Greg"
         if not self.scores:
             return

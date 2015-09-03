@@ -268,7 +268,7 @@ class Tofbot(Bot):
             pass
 
     @cmd(1)
-    def cmd_ping(self, chan, args):
+    def cmd_ping(self, chan, args, sender_nick):
         "Find when X was last online"
         who = args[0]
         if who in self.pings:
@@ -281,7 +281,7 @@ class Tofbot(Bot):
             self.msg(chan, "I havn't seen any message from " + who)
 
     @cmd(1)
-    def cmd_get(self, chan, args):
+    def cmd_get(self, chan, args, sender_nick):
         "Retrieve a configuration variable's value"
         key = args[0]
         value = self.safe_getattr(key)
@@ -291,7 +291,7 @@ class Tofbot(Bot):
             self.msg(chan, "%s = %s" % (key, value))
 
     @cmd(2)
-    def cmd_set(self, chan, args):
+    def cmd_set(self, chan, args, sender_nick):
         "Set a configuration variable's value"
         key = args[0]
         value = args[1]
