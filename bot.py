@@ -181,12 +181,7 @@ class Tofbot(Bot):
                 return
 
             cmd = cmd[1:]
-
-            chan = None
-            if len(self.channels) == 0:
-                chan = 'config'
-            else:
-                chan = self.channels[0]
+            chan = self.channels[0]
 
             if cmd in _simple_dispatch:
                 act = self.find_cmd_action("cmd_" + cmd)

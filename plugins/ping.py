@@ -30,5 +30,5 @@ class PluginPing(Plugin):
                 (who, self.pings[who].__str__(), datetime.now().__str__())
             )
         else:
-            self.msg(chan, "I havn't seen any message from " + who)
+            self.say("I havn't seen any message from " + who)
 
