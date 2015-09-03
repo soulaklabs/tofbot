@@ -35,6 +35,7 @@ from toflib import _simple_dispatch, urls_in, cmd, Cron, CronEvent
 
 import plugins.getset
 import plugins.ping
+import plugins.context
 import plugins.euler
 import plugins.lolrate
 import plugins.donnezmoi
@@ -81,13 +82,10 @@ class Tofbot(Bot):
         self.riddleMaxDist = 2
         self.debug = debug
         self.TGtime = 5
-        self.memoryDepth = 20
         self.lolRateDepth = 8
-        self.msgMemory = []
         self.cron = Cron()
         self.lastTGtofbot = 0
         self.plugins = self.load_plugins()
-        self.startMsgs = []
         self.msgHandled = False
 
     def load_plugins(self):
@@ -138,9 +136,6 @@ class Tofbot(Bot):
             return
 
         if command_type == 'JOIN':
-            for m in self.startMsgs:
-                self.msg(self.channels[0], m)
-            self.startMsgs = []
             for p in self.plugins.values():
                 p.on_join(args[0], sender_nick)
 
@@ -172,11 +167,6 @@ class Tofbot(Bot):
                     p.handle_msg(msg_text, chan, sender_nick)
                 for url in urls:
                     p.on_url(url)
-
-            if chan == self.channels[0] and cmd[0] != '!':
-                self.msgMemory.append("<" + sender_nick + "> " + msg_text)
-                if len(self.msgMemory) > self.memoryDepth:
-                    del self.msgMemory[0]
 
             if len(cmd) == 0 or cmd[0] != '!':
                 return
@@ -255,16 +245,6 @@ class Tofbot(Bot):
         except ValueError:
             pass
 
-    def send_context(self, to):
-        "Gives you last messages from the channel"
-
-        intro = "Derniers %s messages envoyés sur %s :" % (
-                str(len(self.msgMemory)), self.channels[0])
-        self.msg(to, intro)
-
-        for msg in self.msgMemory:
-            self.msg(to, msg)
-
     def send_help(self, to):
         "Show this help message"
         maxlen = 1 + max(map(len, _simple_dispatch))
@@ -273,8 +253,6 @@ class Tofbot(Bot):
                  "ou via message privé")
 
         self.msg(to, '%*s - %s' % (maxlen, "!help", self.send_help.__doc__))
-        self.msg(to, '%*s - %s' % (maxlen, "!context",
-                 self.send_context.__doc__))
 
         for cmd in _simple_dispatch:
             f = self.find_cmd_action("cmd_" + cmd)
