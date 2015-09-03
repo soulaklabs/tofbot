@@ -31,4 +31,3 @@ class PluginPing(Plugin):
             )
         else:
             self.say("I havn't seen any message from " + who)
-
