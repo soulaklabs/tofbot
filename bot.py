@@ -24,20 +24,15 @@ Legacy-arguments:
 
 from datetime import datetime
 from irc import Bot
-import time
 import random
 import sys
 import os
 import plugins
 import types
-from toflib import _simple_dispatch, urls_in
-from toflib import *
-import re
-from optparse import OptionParser
 import json
 import atexit
-import socket
 import traceback
+from toflib import _simple_dispatch, urls_in, cmd, Cron, CronEvent
 
 import plugins.euler
 import plugins.lolrate

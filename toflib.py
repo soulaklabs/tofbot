@@ -105,7 +105,6 @@ class InnocentHand(object):
     def __call__(self, index=None):
         if index:
             return self.pool[index % len(self.pool)]
-        random.seed()
         return random.choice(self.pool)
 
 
