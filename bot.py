@@ -33,6 +33,7 @@ import atexit
 import traceback
 from toflib import _simple_dispatch, urls_in, cmd, Cron, CronEvent
 
+import plugins.getset
 import plugins.ping
 import plugins.euler
 import plugins.lolrate
@@ -253,25 +254,6 @@ class Tofbot(Bot):
             return True
         except ValueError:
             pass
-
-    @cmd(1)
-    def cmd_get(self, chan, args, sender_nick):
-        "Retrieve a configuration variable's value"
-        key = args[0]
-        value = self.safe_getattr(key)
-        if value is None:
-            self.msg(chan, "Ne touche pas à mes parties privées !")
-        else:
-            self.msg(chan, "%s = %s" % (key, value))
-
-    @cmd(2)
-    def cmd_set(self, chan, args, sender_nick):
-        "Set a configuration variable's value"
-        key = args[0]
-        value = args[1]
-        ok = self.safe_setattr(key, value)
-        if not ok:
-            self.msg(chan, "N'écris pas sur mes parties privées !")
 
     def send_context(self, to):
         "Gives you last messages from the channel"
