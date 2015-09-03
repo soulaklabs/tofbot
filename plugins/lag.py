@@ -112,8 +112,12 @@ class PluginLag(Plugin):
                 mentions[i] = mentions[i]._replace(pending=False)
 
     def best_match(self, nick):
+        def norm_dist(x):
+            return float(distance(x, nick))/max(len(nick), len(x))
         try:
-            return min(self.data.keys(), key=lambda x: distance(x, nick))
+            best = min(self.data.keys(), key=norm_dist)
+            if norm_dist(best) <= 0.5:
+                return best
         except ValueError:
             return None
 
@@ -126,8 +130,6 @@ class PluginLag(Plugin):
             if best is None:
                 self.say("Pas d'infos sur %s." % who)
                 return
-            self.say("Pas d'infos sur %s, mais je connais %s:" % (who,
-                     best))
             who = best
 
         lag = self.lag(who)
@@ -151,9 +153,6 @@ class PluginLag(Plugin):
             if best is None:
                 self.private(sender_nick, "Pas d'infos sur %s." % who)
                 return
-            self.private(sender_nick,
-                         "Pas d'infos sur %s, mais je connais %s:" %
-                         (who, best))
             who = best
 
         mentions = self.data[who]["mentions"]
