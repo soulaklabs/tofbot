@@ -22,7 +22,6 @@ Legacy-arguments:
     Tofbot will connect to freenode.net
 """
 
-from datetime import datetime
 from irc import Bot
 import random
 import sys
@@ -34,6 +33,7 @@ import atexit
 import traceback
 from toflib import _simple_dispatch, urls_in, cmd, Cron, CronEvent
 
+import plugins.ping
 import plugins.euler
 import plugins.lolrate
 import plugins.donnezmoi
@@ -80,7 +80,6 @@ class Tofbot(Bot):
         self.riddleMaxDist = 2
         self.debug = debug
         self.TGtime = 5
-        self.pings = {}
         self.memoryDepth = 20
         self.lolRateDepth = 8
         self.msgMemory = []
@@ -156,8 +155,6 @@ class Tofbot(Bot):
             msg = msg_text.strip().split(" ")
             cmd = msg[0]
             chan = args[2]
-
-            self.pings[sender_nick] = datetime.now()
 
             self.cron.tick()
 
@@ -261,19 +258,6 @@ class Tofbot(Bot):
             return True
         except ValueError:
             pass
-
-    @cmd(1)
-    def cmd_ping(self, chan, args, sender_nick):
-        "Find when X was last online"
-        who = args[0]
-        if who in self.pings:
-            self.msg(
-                chan,
-                "Last message from %s was on %s (btw my local time is %s)" %
-                (who, self.pings[who].__str__(), datetime.now().__str__())
-            )
-        else:
-            self.msg(chan, "I havn't seen any message from " + who)
 
     @cmd(1)
     def cmd_get(self, chan, args, sender_nick):
