@@ -188,7 +188,7 @@ class Tofbot(Bot):
             for p in self.plugins.values():
                 p.on_leave(sender_nick)
 
-        elif command_type == '353': # Reply to NAMES
+        elif command_type == '353':  # Reply to NAMES
             names = set([n.lstrip('@') for n in args[0].split(' ')
                          if n.lstrip('@') != self.nick])
             # act like if everybody just joined
