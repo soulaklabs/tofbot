@@ -31,8 +31,9 @@ import types
 import json
 import atexit
 import traceback
-from toflib import _simple_dispatch, urls_in, cmd, Cron, CronEvent
+from toflib import _simple_dispatch, urls_in, Cron, CronEvent
 
+import plugins.help
 import plugins.getset
 import plugins.ping
 import plugins.context
@@ -177,10 +178,6 @@ class Tofbot(Bot):
             if cmd in _simple_dispatch:
                 act = self.find_cmd_action("cmd_" + cmd)
                 act(chan, msg[1:], sender_nick)
-            elif cmd == 'context':
-                self.send_context(sender_nick)
-            elif cmd == 'help':
-                self.send_help(sender_nick)
 
         elif command_type == 'PING':
             self.log('PING received in bot.py')
@@ -244,23 +241,6 @@ class Tofbot(Bot):
             return True
         except ValueError:
             pass
-
-    def send_help(self, to):
-        "Show this help message"
-        maxlen = 1 + max(map(len, _simple_dispatch))
-
-        self.msg(to, "Les commandes doivent être entrées dans le channel "
-                 "ou via message privé")
-
-        self.msg(to, '%*s - %s' % (maxlen, "!help", self.send_help.__doc__))
-
-        for cmd in _simple_dispatch:
-            f = self.find_cmd_action("cmd_" + cmd)
-            self.msg(to, '%*s - %s' % (maxlen, "!" + cmd, f.__doc__))
-        self.msg(to, "Vous pouvez aussi utiliser !get ou !set sur " +
-                 ", ".join(self._mutable_attributes.keys()))
-        self.msg(to, "Si les random-tofades vous ennuient, entrez 'TG " +
-                 self.nick + "' (Annulé par 'GG " + self.nick + "')")
 
     def load(self, filename):
         try:

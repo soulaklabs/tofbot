@@ -9,7 +9,6 @@
 
 "See PluginContext"
 from toflib import Plugin, cmd
-from datetime import datetime
 
 
 class PluginContext(Plugin):
