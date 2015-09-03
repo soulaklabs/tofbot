@@ -143,7 +143,7 @@ class Plugin(object):
     def on_join(self, chan, nick):
         pass
 
-    def on_leave(self, chan, nick):
+    def on_leave(self, nick):
         pass
 
     def on_quit(self, nick):
