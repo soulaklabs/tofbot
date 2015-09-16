@@ -182,7 +182,7 @@ class Tofbot(Bot):
 
         elif command_type == 'QUIT':
             for p in self.plugins.values():
-                p.on_leave(sender_nick)
+                p.on_quit(sender_nick)
 
         elif command_type == '353':  # Reply to NAMES
             names = set([n.lstrip('@') for n in args[0].split(' ')

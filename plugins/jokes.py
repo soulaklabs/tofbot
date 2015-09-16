@@ -81,6 +81,9 @@ class PluginJokes(Plugin):
         if nick != self.bot.nick:
             self.cmd_tofme(chan, [nick])
 
+    def on_leave(self, chan, nick):
+        self.say("%s est un sale lâcheur." % nick)
+
     def handle_msg(self, msg_text, chan, nick):
         stripped = msg_text.strip().lower()
         if stripped == "tg " + self.bot.nick:
