@@ -78,9 +78,10 @@ class PluginLag(Plugin):
     def lag(self, nick):
         "Returns the time between now and the oldest pending mention"
         now = datetime.datetime.now()
-        for m in self.data[nick]["mentions"]:
-            if m.pending:
-                return now - m.timestamp
+        if nick in self.data:
+            for m in self.data[nick]["mentions"]:
+                if m.pending:
+                    return now - m.timestamp
         return None
 
     def handle_msg(self, msg_text, _chan, me):
