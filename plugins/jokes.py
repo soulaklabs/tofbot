@@ -82,12 +82,10 @@ class PluginJokes(Plugin):
             self.cmd_tofme(chan, [nick])
 
     def on_leave(self, chan, nick):
-        if self.tofade_time(has_context=False):
-            self.say("%s est un sale lâcheur." % nick)
+        self.say("%s est un sale lâcheur." % nick)
 
     def on_quit(self, nick):
-        if self.tofade_time(has_context=False):
-            self.say("%s s'est fait harakiri." % nick)
+        self.say("%s s'est fait harakiri." % nick)
 
     def handle_msg(self, msg_text, chan, nick):
         stripped = msg_text.strip().lower()
