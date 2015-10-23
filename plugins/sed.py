@@ -25,6 +25,10 @@ class PluginSed(Plugin):
 
         if m is not None and self.msg is not None:
             regexp = m.group(1)
+            try:
+                regexp = re.compile(regexp)
+            except re.error:
+                pass
             to = m.group(2)
             msg_who = self.msg[0]
             msg_what = self.msg[1]
