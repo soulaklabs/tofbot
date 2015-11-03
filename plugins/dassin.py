@@ -158,7 +158,59 @@ class PluginDassin(Plugin):
                 "j'ai le dvd dans mon anus"
                 ]
 
-        songs = [oizo, ete, colline, bora, hell, hibernatus, chuck]
+        lundi = [
+                "Il est déjà huit heures",
+                "Embrassons nous tendrement",
+                "Un taxi t'emporte",
+                "Tu t'en vas, mon cœur",
+                "Parmi ces milliers de gens",
+                "C'est une journée idéale",
+                "Pour marcher dans la forêt",
+                "On trouverait plus normal",
+                "D'aller se coucher",
+                "Seuls dans les genêts",
+                "Le lundi au soleil",
+                "C'est une chose qu'on n'aura jamais",
+                "Chaque fois c'est pareil",
+                "C'est quand on est derrière les carreaux",
+                "Quand on travaille que le ciel est beau",
+                "Qu'il doit faire beau sur les routes",
+                "Le lundi au soleil",
+                "Le lundi au soleil",
+                "On pourrait le passer à s'aimer",
+                "Le lundi au soleil",
+                "On serait mieux dans l'odeur des foins",
+                "On aimerait mieux cueillir le raisin",
+                "Ou simplement ne rien faire",
+                "Le lundi au soleil",
+                "Toi, tu es à... l'autre bout",
+                "De cette ville",
+                "Là-bas, comme chaque jour",
+                "Les dernières heures",
+                "Sont les plus difficiles",
+                "J'ai besoin de ton amour",
+                "Et puis dans la foule au loin",
+                "Je te vois, tu me souris",
+                "Les néons des magasins",
+                "Sont tous allumés",
+                "C'est déjà la nuit",
+                "Le lundi au soleil",
+                "C'est une chose qu'on n'aura jamais",
+                "Chaque fois c'est pareil",
+                "C'est quand on est derrière les carreaux",
+                "Quand on travaille que le ciel est beau",
+                "Qu'il doit faire beau sur les routes",
+                "Le lundi au soleil",
+                "Le lundi au soleil",
+                "On pourrait le passer à s'aimer",
+                "Le lundi au soleil",
+                "On serait mieux dans l'odeur des foins",
+                "On aimerait mieux cueillir le raisin",
+                "Ou simplement ne rien faire",
+                "Le lundi au soleil"
+                ]
+
+        songs = [oizo, ete, colline, bora, hell, hibernatus, chuck, lundi]
 
         searched = msg_text.lower()
         minDist = 9999999
