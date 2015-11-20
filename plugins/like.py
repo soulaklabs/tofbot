@@ -44,7 +44,7 @@ class PluginLike(Plugin):
     def cmd_starz(self, _chan, args, sender_nick):
         "Give starz to someone"
         try:
-            n = min(max(int(args[0]), 0), 5)
+            n = min(max(int(args[0]), 0), 4)
         except ValueError:
             return
         if len(args) >= 2:
@@ -56,10 +56,10 @@ class PluginLike(Plugin):
 
     @cmd(0)
     def cmd_like(self, _chan, _args, sender_nick):
-        "Alias for '!starz 4 <previous speaker>'"
+        "Alias for '!starz 3 <previous speaker>'"
         if sender_nick != self.previous_speaker:
             if self.previous_speaker is not None:
-                self.give(4, self.previous_speaker)
+                self.give(3, self.previous_speaker)
 
     @cmd(1)
     def cmd_score(self, _chan, args, _sender_nick):
