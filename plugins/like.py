@@ -33,7 +33,7 @@ class PluginLike(Plugin):
             return
         self.scores[nick][0] += n
         self.scores[nick][1] += 1
-        self.say(nick + ": " + "★" * n + "☆" * (5-n))
+        self.say(nick + ": " + "★" * n + "☆" * (4-n))
 
     def avg_stars(self, nick):
         if nick not in self.scores or self.scores[nick][1] == 0:
