@@ -40,14 +40,14 @@ class PluginLike(Plugin):
             return None
         return float(self.scores[nick][0])/self.scores[nick][1]
 
-    @cmd(1, 2)
+    @cmd(1, 100)
     def cmd_starz(self, _chan, args, sender_nick):
         "Give starz to someone"
         try:
             n = min(max(int(args[0]), 0), 5)
         except ValueError:
             return
-        if len(args) == 2:
+        if len(args) >= 2:
             nick = args[1]
         else:
             nick = self.previous_speaker
