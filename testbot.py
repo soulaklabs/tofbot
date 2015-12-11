@@ -87,6 +87,11 @@ def bot_kick(bot, msg=None):
     return bot_action(bot, lambda: bot.kick(msg))
 
 
+def set_clock(now_mock, hours=0, minutes=0):
+    from datetime import datetime
+    now_mock.return_value = datetime(1941, 2, 16, hours, minutes, 0, 0)
+
+
 class TestCase(unittest.TestCase):
 
     def setUp(self):
@@ -99,6 +104,16 @@ class TestCase(unittest.TestCase):
         cmds = ['!set autoTofadeThreshold 100']
         for cmd in cmds:
             bot_input(self.bot, cmd)
+
+    def assertOutputDo(self, outp):
+        if isinstance(outp, str):
+            outp = [outp]
+
+        def wrapper(f):
+            l = bot_action(self.bot, lambda: f())
+            self.assertEqual(l, outp)
+
+        return wrapper
 
     def assertOutput(self, inp, outp):
         """
@@ -298,14 +313,11 @@ class TestCase(unittest.TestCase):
 
     @patch('plugins.lolrate.datetime_now')
     def test_lol_rate(self, now_mock):
-        def set_clock(hours):
-            from datetime import datetime
-            now_mock.return_value = datetime(1941, 2, 16, hours, 0, 0, 0)
 
         self.bot.send('!set lolRateDepth 2')
         self.assertOutput('!get lolRateDepth', 'lolRateDepth = 2')
 
-        set_clock(12)
+        set_clock(now_mock, 12)
         self.bot.send('lol')
         self.bot.send('lol')
         expected = '16 Feb 12h-13h : 2 lolz'
@@ -313,13 +325,13 @@ class TestCase(unittest.TestCase):
         # check that the command itself does not increment
         self.assertOutput('!lulz', expected)
 
-        set_clock(13)
+        set_clock(now_mock, 13)
         self.bot.send('lol')
         self.assertOutput('!lulz', ['16 Feb 13h-14h : 1 lolz',
                                     expected,
                                     ])
 
-        set_clock(14)
+        set_clock(now_mock, 14)
         self.bot.send('lol')
         self.assertOutput('!lulz', ['16 Feb 14h-15h : 1 lolz',
                                     '16 Feb 13h-14h : 1 lolz',
@@ -342,3 +354,30 @@ class TestCase(unittest.TestCase):
         twitter_set_tweet('roflman', tweet, tweet_id)
         msg = 'https://twitter.com/roflman/status/%d' % tweet_id
         self.assertOutput(msg, tweet)
+
+    @patch('plugins.risoli.datetime_now')
+    def test_risoli(self, now_mock):
+        plugin = self.bot.plugins['risoli']
+        chan = 'chan'
+        gonze = 'jean-michel'
+        set_clock(now_mock, minutes=32)
+        plugin.on_join(chan, gonze)
+        self.bot.send('%s: 37' % self.bot.nick, origin="alice")
+        self.bot.send('%s: 35' % self.bot.nick, origin="bob")
+        self.bot.send('%s: notanumber' % self.bot.nick, origin="mallory")
+
+        @self.assertOutputDo('bob gagne un Point Internet')
+        def jean_michel_leaves():
+            set_clock(now_mock, minutes=36)
+            plugin.on_leave(chan, gonze)
+
+        other_gonze = 'alberto'
+        set_clock(now_mock, hours=2, minutes=59)
+        plugin.on_join(chan, other_gonze)
+        self.bot.send('%s: 13' % self.bot.nick, origin="carla")
+        self.bot.send('%s: 17' % self.bot.nick, origin="dylan")
+
+        @self.assertOutputDo('carla gagne un Point Internet')
+        def alberto_leaves():
+            set_clock(now_mock, hours=3, minutes=15)
+            plugin.on_leave(chan, other_gonze)
