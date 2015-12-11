@@ -47,6 +47,7 @@ import plugins.expand
 import plugins.like
 import plugins.ponce
 import plugins.lag
+import plugins.risoli
 
 random.seed()
 
