@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/tofbot/tofbot.svg)](https://travis-ci.org/tofbot/tofbot)
+[![Build Status](https://travis-ci.org/soulaklabs/tofbot.svg)](https://travis-ci.org/soulaklabs/tofbot)
 
 This is tofbot
 ==============

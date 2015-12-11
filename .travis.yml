@@ -14,4 +14,4 @@ deploy:
   app: tofbot
   domain: chmd
   on:
-    repo: tofbot/tofbot
+    repo: soulaklabs/tofbot
