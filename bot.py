@@ -28,6 +28,9 @@ import types
 import json
 import atexit
 import traceback
+import threading
+import time
+import signal
 from toflib import _simple_dispatch, urls_in, Cron, CronEvent
 
 import plugins.help
@@ -85,7 +88,11 @@ class Tofbot(Bot):
         self.cron = Cron()
         self.lastTGtofbot = 0
         self.memoryDepth = 20
+        self.last_interaction = int(time.time())
         self.plugins = self.load_plugins()
+
+    def idle_time(self):
+        return int(time.time() - self.last_interaction)
 
     def load_plugins(self):
         d = os.path.dirname(__file__)
@@ -124,6 +131,7 @@ class Tofbot(Bot):
 
     def dispatch(self, origin, args):
         # Useful: https://www.alien.net.au/irc/irc2numerics.html
+        self.last_interaction = time.time()
         self.log("o=%s n=%s a=%s" % (origin.sender, origin.nick, args))
 
         sender_nick = origin.nick
@@ -257,6 +265,15 @@ class Tofbot(Bot):
             print "Can't save state. Error: ", e
 
 
+def kill_if_disconnected(bot, timeout):
+    while True:
+        time.sleep(timeout)
+        if bot.idle_time() > timeout:
+            bot.log("Idle for more than %ds. Exiting..." % timeout)
+            os.kill(os.getpid(), signal.SIGINT)
+            break
+
+
 def main():
     host = os.getenv("TOFBOT_SERVER", "irc.freenode.net")
     port = int(os.getenv("TOFBOT_PORT", "6667"))
@@ -283,6 +300,8 @@ def main():
         b.save(state_file)
         print("Done !")
 
+    t = threading.Thread(target=kill_if_disconnected, args=(b, 240))
+    t.start()
     b.run(host, port)
 
 if __name__ == "__main__":
