@@ -16,6 +16,7 @@ The bot reads its configuration from the environment. Relevant variables:
     TOFBOT_PASSWD   -                       -
     TOFBOT_NAME     tofbot                  -
     TOFBOT_DEBUG    -                       -
+    TOFBOT_TIMEOUT  240                     Exit if server does not ping
 
 Launch with
 

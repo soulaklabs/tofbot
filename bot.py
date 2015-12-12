@@ -282,6 +282,7 @@ def main():
     password = os.getenv("TOFBOT_PASSWD", None)
     name = os.getenv("TOFBOT_NAME", "tofbot")
     debug = bool(os.getenv("TOFBOT_DEBUG", ""))
+    timeout = int(os.getenv("TOFBOT_TIMEOUT", "240"))
 
     b = Tofbot(nick, name, chan, password, debug)
 
@@ -300,7 +301,7 @@ def main():
         b.save(state_file)
         print("Done !")
 
-    t = threading.Thread(target=kill_if_disconnected, args=(b, 240))
+    t = threading.Thread(target=kill_if_disconnected, args=(b, timeout))
     t.start()
     b.run(host, port)
 
