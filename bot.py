@@ -265,8 +265,6 @@ class Tofbot(Bot):
             print "Can't save state. Error: ", e
 
 
-
-
 def kill_if_disconnected(bot, timeout):
     while True:
         time.sleep(timeout)
