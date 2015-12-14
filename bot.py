@@ -270,11 +270,7 @@ def kill_if_disconnected(bot, timeout):
         time.sleep(timeout)
         if bot.idle_time() > timeout:
             bot.log("Idle for more than %ds. Exiting..." % timeout)
-            if 'OPENSHIFT_APP_NAME' in os.environ:
-                import subprocess
-                subprocess.call(["ctl_all", "restart"])
-            else:
-                os.kill(os.getpid(), signal.SIGTERM)
+            os.kill(os.getpid(), signal.SIGTERM)
             break
 
 
