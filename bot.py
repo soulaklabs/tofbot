@@ -270,7 +270,7 @@ def kill_if_disconnected(bot, timeout):
         time.sleep(timeout)
         if bot.idle_time() > timeout:
             bot.log("Idle for more than %ds. Exiting..." % timeout)
-            os.kill(os.getpid(), signal.SIGINT)
+            os.kill(os.getpid(), signal.SIGTERM)
             break
 
 
@@ -302,6 +302,7 @@ def main():
         print("Done !")
 
     t = threading.Thread(target=kill_if_disconnected, args=(b, timeout))
+    t.daemon = True
     t.start()
     b.run(host, port)
 
