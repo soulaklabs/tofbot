@@ -365,6 +365,7 @@ class TestCase(unittest.TestCase):
         self.bot.send('%s: 37' % self.bot.nick, origin="alice")
         self.bot.send('%s: 35' % self.bot.nick, origin="bob")
         self.bot.send('%s: notanumber' % self.bot.nick, origin="mallory")
+        plugin.on_join(chan, 'juan-carlo')
 
         @self.assertOutputDo('bob gagne un Point Internet')
         def jean_michel_quits():

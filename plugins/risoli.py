@@ -53,10 +53,10 @@ class PluginRisoli(Plugin):
     def __init__(self, bot):
         super(PluginRisoli, self).__init__(bot)
         self._game = None
+        self._next_game = None
 
     def on_join(self, chan, nick):
-        join_time = datetime_now()
-        self._game = Game(nick, join_time)
+        self._next_game = Game(nick, datetime_now())
 
     def _register_leave(self, nick):
         if self._game and self._game.nick == nick:
@@ -74,7 +74,9 @@ class PluginRisoli(Plugin):
 
     def handle_msg(self, msg_text, chan, nick):
         m = re.match('%s: (\d+)' % re.escape(self.bot.nick), msg_text)
-        if self._game and m:
+        if m:
+            if not self._game:
+                self._game = self._next_game
             bet = int(m.group(1))
             expected_leave_time = next_with_minute_equal_to(bet)
             self._game.add_bet(nick, expected_leave_time)
