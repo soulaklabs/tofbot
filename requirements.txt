@@ -1,6 +1,6 @@
 # Run dependencies
 beautifulsoup4
-HTTPretty
+HTTPretty==0.8.10
 requests
 unidecode
 # Test dependencies
