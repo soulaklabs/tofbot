@@ -367,9 +367,9 @@ class TestCase(unittest.TestCase):
         self.bot.send('%s: notanumber' % self.bot.nick, origin="mallory")
 
         @self.assertOutputDo('bob gagne un Point Internet')
-        def jean_michel_leaves():
+        def jean_michel_quits():
             set_clock(now_mock, minutes=36)
-            plugin.on_leave(chan, gonze)
+            plugin.on_quit(gonze)
 
         other_gonze = 'alberto'
         set_clock(now_mock, hours=2, minutes=59)

@@ -58,13 +58,19 @@ class PluginRisoli(Plugin):
         join_time = datetime_now()
         self._game = Game(nick, join_time)
 
-    def on_leave(self, chan, nick):
+    def _register_leave(self, nick):
         if self._game and self._game.nick == nick:
             leave_time = datetime_now()
             winner = self._game.end(leave_time)
             if winner is not None:
                 self.say('%s gagne un Point Internet' % winner)
             self._game = None
+
+    def on_leave(self, chan, nick):
+        self._register_leave(nick)
+
+    def on_quit(self, nick):
+        self._register_leave(nick)
 
     def handle_msg(self, msg_text, chan, nick):
         m = re.match('%s: (\d+)' % re.escape(self.bot.nick), msg_text)
