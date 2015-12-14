@@ -27,7 +27,8 @@ class Game(object):
         self._bets = {}
 
     def add_bet(self, nick, expected_leave_time):
-        self._bets[nick] = expected_leave_time
+        if nick not in self._bets:
+            self._bets[nick] = expected_leave_time
 
     def end(self, leave_time):
         def ok((nick, dt)):

@@ -364,6 +364,7 @@ class TestCase(unittest.TestCase):
         plugin.on_join(chan, gonze)
         self.bot.send('%s: 37' % self.bot.nick, origin="alice")
         self.bot.send('%s: 35' % self.bot.nick, origin="bob")
+        self.bot.send('%s: 38' % self.bot.nick, origin="bob")
         self.bot.send('%s: notanumber' % self.bot.nick, origin="mallory")
         plugin.on_join(chan, 'juan-carlo')
 
