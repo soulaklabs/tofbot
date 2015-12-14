@@ -381,3 +381,12 @@ class TestCase(unittest.TestCase):
         def alberto_leaves():
             set_clock(now_mock, hours=3, minutes=15)
             plugin.on_leave(chan, other_gonze)
+
+        only_gonze = 'tof'
+        set_clock(now_mock, minutes=32)
+        plugin.on_join(chan, only_gonze)
+        self.bot.send('%s: 34' % self.bot.nick, origin="dylan")
+
+        @self.assertOutputDo([])
+        def tof_leaves():
+            plugin.on_leave(chan, only_gonze)

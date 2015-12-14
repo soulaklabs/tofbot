@@ -33,8 +33,11 @@ class Game(object):
         def ok((nick, dt)):
             return dt < leave_time
         ok_bets = [bet for bet in self._bets.items() if ok(bet)]
-        winner_bet = max(ok_bets, key=itemgetter(1))
-        return winner_bet[0]
+        if ok_bets:
+            winner_bet = max(ok_bets, key=itemgetter(1))
+            return winner_bet[0]
+        else:
+            return
 
 
 def next_with_minute_equal_to(minute):
