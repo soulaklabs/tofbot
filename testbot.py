@@ -364,12 +364,14 @@ class TestCase(unittest.TestCase):
         plugin.on_join(chan, gonze)
         self.bot.send('%s: 37' % self.bot.nick, origin="alice")
         self.bot.send('%s: 35' % self.bot.nick, origin="bob")
+        self.bot.send('%s: 38' % self.bot.nick, origin="bob")
         self.bot.send('%s: notanumber' % self.bot.nick, origin="mallory")
+        plugin.on_join(chan, 'juan-carlo')
 
         @self.assertOutputDo('bob gagne un Point Internet')
-        def jean_michel_leaves():
+        def jean_michel_quits():
             set_clock(now_mock, minutes=36)
-            plugin.on_leave(chan, gonze)
+            plugin.on_quit(gonze)
 
         other_gonze = 'alberto'
         set_clock(now_mock, hours=2, minutes=59)
@@ -381,3 +383,12 @@ class TestCase(unittest.TestCase):
         def alberto_leaves():
             set_clock(now_mock, hours=3, minutes=15)
             plugin.on_leave(chan, other_gonze)
+
+        only_gonze = 'tof'
+        set_clock(now_mock, minutes=32)
+        plugin.on_join(chan, only_gonze)
+        self.bot.send('%s: 34' % self.bot.nick, origin="dylan")
+
+        @self.assertOutputDo([])
+        def tof_leaves():
+            plugin.on_leave(chan, only_gonze)
