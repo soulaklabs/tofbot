@@ -416,3 +416,8 @@ class TestCase(unittest.TestCase):
         def alberto_leaves():
             set_clock(now_mock, minutes=35)
             plugin.on_leave(chan, the_gonze)
+
+    def test_risoli_overflow(self):
+        plugin = self.bot.plugins['risoli']
+        plugin.on_join('chan', 'a')
+        self.bot.send('%s: 70' % self.bot.nick, origin="b")
