@@ -373,6 +373,10 @@ class TestCase(unittest.TestCase):
             set_clock(now_mock, minutes=36)
             plugin.on_quit(gonze)
 
+    @patch('plugins.risoli.datetime_now')
+    def test_risoli_hour(self, now_mock):
+        plugin = self.bot.plugins['risoli']
+        chan = 'chan'
         other_gonze = 'alberto'
         set_clock(now_mock, hours=2, minutes=59)
         plugin.on_join(chan, other_gonze)
@@ -384,6 +388,10 @@ class TestCase(unittest.TestCase):
             set_clock(now_mock, hours=3, minutes=15)
             plugin.on_leave(chan, other_gonze)
 
+    @patch('plugins.risoli.datetime_now')
+    def test_risoli_nobody_wins(self, now_mock):
+        plugin = self.bot.plugins['risoli']
+        chan = 'chan'
         only_gonze = 'tof'
         set_clock(now_mock, minutes=32)
         plugin.on_join(chan, only_gonze)
@@ -392,3 +400,19 @@ class TestCase(unittest.TestCase):
         @self.assertOutputDo([])
         def tof_leaves():
             plugin.on_leave(chan, only_gonze)
+
+    @patch('plugins.risoli.datetime_now')
+    def test_risoli_same_hour(self, now_mock):
+        plugin = self.bot.plugins['risoli']
+        chan = 'chan'
+        the_gonze = 'alberto'
+        set_clock(now_mock, minutes=34)
+        plugin.on_join(chan, the_gonze)
+        self.bot.send('%s: 35' % self.bot.nick, origin="a")
+        self.bot.send('%s: 33' % self.bot.nick, origin="b")
+        self.bot.send('%s: 38' % self.bot.nick, origin="c")
+
+        @self.assertOutputDo('a gagne un Point Internet')
+        def alberto_leaves():
+            set_clock(now_mock, minutes=35)
+            plugin.on_leave(chan, the_gonze)
