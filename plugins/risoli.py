@@ -32,7 +32,7 @@ class Game(object):
 
     def end(self, leave_time):
         def ok((nick, dt)):
-            return dt < leave_time
+            return dt <= leave_time
         ok_bets = [bet for bet in self._bets.items() if ok(bet)]
         if ok_bets:
             winner_bet = max(ok_bets, key=itemgetter(1))
@@ -75,9 +75,15 @@ class PluginRisoli(Plugin):
 
     def handle_msg(self, msg_text, chan, nick):
         m = re.match('%s: (\d+)' % re.escape(self.bot.nick), msg_text)
-        if m:
-            if not self._game:
-                self._game = self._next_game
+        if not m:
+            return
+        if not self._game:
+            self._game = self._next_game
+        if self._game:
             bet = int(m.group(1))
-            expected_leave_time = next_with_minute_equal_to(bet)
-            self._game.add_bet(nick, expected_leave_time)
+            try:
+                expected_leave_time = next_with_minute_equal_to(bet)
+            except ValueError:
+                return
+            if expected_leave_time is not None:
+                self._game.add_bet(nick, expected_leave_time)
