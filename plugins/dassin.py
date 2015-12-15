@@ -9,6 +9,7 @@
 #                    Martin Kirchgessner <martin.kirch@gmail.com>
 from toflib import Plugin
 from toflib import distance
+import unidecode
 
 
 class PluginDassin(Plugin):
@@ -212,7 +213,7 @@ class PluginDassin(Plugin):
 
         songs = [oizo, ete, colline, bora, hell, hibernatus, chuck, lundi]
 
-        searched = msg_text.lower()
+        searched = unidecode.unidecode(msg_text.decode("utf-8")).lower()
         minDist = 9999999
         best = ""
 
