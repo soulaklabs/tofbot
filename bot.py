@@ -32,6 +32,7 @@ import threading
 import time
 import signal
 import httpserver
+import requests
 from toflib import _simple_dispatch, urls_in, Cron, CronEvent
 
 import plugins.help
@@ -275,6 +276,13 @@ def kill_if_disconnected(bot, timeout):
             break
 
 
+def self_query():
+    host = os.getenv("OPENSHIFT_APP_DNS", "127.0.0.1")
+    while True:
+        time.sleep(3600)
+        requests.get("http://" + host)
+
+
 def main():
     host = os.getenv("TOFBOT_SERVER", "irc.freenode.net")
     port = int(os.getenv("TOFBOT_PORT", "6667"))
@@ -309,6 +317,10 @@ def main():
     server = threading.Thread(target=httpserver.run)
     server.daemon = True
     server.start()
+
+    keepalive = threading.Thread(target=self_query)
+    keepalive.daemon = True
+    keepalive.start()
 
     b.run(host, port)
 
