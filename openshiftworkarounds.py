@@ -43,4 +43,3 @@ def do():
     keepalive = threading.Thread(target=self_query)
     keepalive.daemon = True
     keepalive.start()
-
