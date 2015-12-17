@@ -41,3 +41,6 @@ You need an [openshift](https://www.openshift.com/) account.
     git push openshift HEAD
 
 That's all, folks.
+
+This bot serves something to make openshift happy. See
+[http://tofbot-chmd.rhcloud.com](http://tofbot-chmd.rhcloud.com)!

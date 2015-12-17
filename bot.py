@@ -31,6 +31,7 @@ import traceback
 import threading
 import time
 import signal
+import httpserver
 from toflib import _simple_dispatch, urls_in, Cron, CronEvent
 
 import plugins.help
@@ -301,9 +302,14 @@ def main():
         b.save(state_file)
         print("Done !")
 
-    t = threading.Thread(target=kill_if_disconnected, args=(b, timeout))
-    t.daemon = True
-    t.start()
+    monitor = threading.Thread(target=kill_if_disconnected, args=(b, timeout))
+    monitor.daemon = True
+    monitor.start()
+
+    server = threading.Thread(target=httpserver.run)
+    server.daemon = True
+    server.start()
+
     b.run(host, port)
 
 if __name__ == "__main__":
