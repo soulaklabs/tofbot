@@ -302,9 +302,9 @@ def main():
         b.save(state_file)
         print("Done !")
 
-    monitorer = threading.Thread(target=kill_if_disconnected, args=(b, timeout))
-    monitorer.daemon = True
-    monitorer.start()
+    monitor = threading.Thread(target=kill_if_disconnected, args=(b, timeout))
+    monitor.daemon = True
+    monitor.start()
 
     server = threading.Thread(target=httpserver.run)
     server.daemon = True

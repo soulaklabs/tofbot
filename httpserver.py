@@ -2,6 +2,7 @@ import os
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import SocketServer
 
+
 class S(BaseHTTPRequestHandler):
     def _set_headers(self):
         self.send_response(200)
@@ -14,6 +15,7 @@ class S(BaseHTTPRequestHandler):
 
     def do_HEAD(self):
         self._set_headers()
+
 
 def run(server_class=HTTPServer, handler_class=S):
     port = int(os.getenv("OPENSHIFT_PYTHON_PORT", "8080"))
