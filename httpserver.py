@@ -19,6 +19,7 @@ class S(BaseHTTPRequestHandler):
 
 def run(server_class=HTTPServer, handler_class=S):
     port = int(os.getenv("OPENSHIFT_PYTHON_PORT", "8080"))
-    server_address = ('', port)
+    ip = os.getenv('OPENSHIFT_PYTHON_IP', '')
+    server_address = (ip, port)
     httpd = server_class(server_address, handler_class)
     httpd.serve_forever()
