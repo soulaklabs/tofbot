@@ -8,24 +8,6 @@ from common import TestTofbot, TestOrigin, TofbotTestCase
 from common import bot_input, bot_action, bot_kick
 
 
-def twitter_set_tweet(name, tweet, tweet_id):
-    url = 'https://twitter.com/{screen_name}/status/{tweet_id}' \
-          .format(screen_name=name,
-                  tweet_id=tweet_id)
-    html = """
-        <html>
-            <body>
-               <div class='permalink-tweet'>
-                    <p class='js-tweet-text'>
-                        {tweet}
-                    </p>
-               </div>
-            </body>
-        </html>
-        """.format(tweet=tweet)
-    HTTPretty.register_uri(HTTPretty.GET, url, body=html)
-
-
 def set_clock(now_mock, hours=0, minutes=0):
     from datetime import datetime
     now_mock.return_value = datetime(1941, 2, 16, hours, minutes, 0, 0)
@@ -156,14 +138,6 @@ class TestCase(TofbotTestCase):
         del self.bot.plugins["jokes"]
         self.bot.send("!set autoTofadeThreshold 0")
         self.assertOutput("elle a les yeux revolver", "C'est ta meuf?")
-
-    @httprettified
-    def test_twitter_expand(self):
-        tweet_id = 1122334455667788
-        tweet = 'Michel!'
-        twitter_set_tweet('roflman', tweet, tweet_id)
-        msg = 'https://twitter.com/roflman/status/%d' % tweet_id
-        self.assertOutput(msg, tweet)
 
     @patch('plugins.risoli.datetime_now')
     def test_risoli(self, now_mock):
