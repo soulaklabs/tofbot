@@ -35,7 +35,7 @@ def self_query():
         requests.get("http://" + host)
 
 
-def do():
+def enable():
     server = threading.Thread(target=serve)
     server.daemon = True
     server.start()
