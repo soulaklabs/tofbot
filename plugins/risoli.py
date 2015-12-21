@@ -6,7 +6,6 @@
 # Copyright (c) 2015 Etienne Millon <me@emillon.org>
 
 from toflib import Plugin
-from plugins.lolrate import datetime_now
 from operator import itemgetter
 from datetime import datetime, timedelta
 import re
