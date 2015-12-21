@@ -51,8 +51,6 @@ class PluginLag(Plugin):
     def set_active(self, nick):
         "Update the last moment the nick was active"
         # If the nick did not exist, add it
-        if nick == self.bot.nick:
-            return
         if nick not in self.data:
             self.data[nick] = {
                     "mentions": [],
@@ -94,23 +92,24 @@ class PluginLag(Plugin):
                     .strip()
                     .split(" "))
 
-        is_cmd = msg_text.strip().startswith('!')
+        # skip commands
+        if msg_text.strip().startswith('!'):
+            return
 
-        # did I mention anybody?
-        if not is_cmd:
-            for nick in self.data.keys():
-                if nick != me and nick in words:
-                    self.add_mention(msg_text, me, nick)
+        # did I mention anybody, except myself?
+        for nick in self.data.keys():
+            if nick != me and nick in words:
+                self.add_mention(msg_text, me, nick)
 
-            # update the lag
-            lag = self.lag(me)
-            if lag is not None:
-                self.data[me]["previous_lag"] = lag
+        # update my lag
+        lag = self.lag(me)
+        if lag is not None:
+            self.data[me]["previous_lag"] = lag
 
-            # my mentions are no longer pending since I just answered
-            mentions = self.data[me]["mentions"]
-            for i in range(len(mentions)):
-                mentions[i] = mentions[i]._replace(pending=False)
+        # my mentions are no longer pending since I just answered
+        mentions = self.data[me]["mentions"]
+        for i in range(len(mentions)):
+            mentions[i] = mentions[i]._replace(pending=False)
 
     @cmd(1)
     def cmd_lag(self, chan, args, sender_nick):
@@ -132,10 +131,13 @@ class PluginLag(Plugin):
             else:
                 self.say("Pas de lag pour %s." % who)
 
-    @cmd(1)
+    @cmd(0, 1)
     def cmd_mentions(self, chan, args, sender_nick):
         "Report the recent mentions of the given nick"
-        who = args[0]
+        who = sender_nick
+        if len(args) >= 1:
+            who = args[0]
+
         if who not in self.data:
             self.private(sender_nick, "Pas d'infos sur %s." % who)
             return
