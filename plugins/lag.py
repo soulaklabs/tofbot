@@ -7,12 +7,13 @@
 # Copyright (c) 2015 Christophe-Marie Duquesne <chmd@chmd.fr>
 
 "See PluginLag"
-from toflib import Plugin, cmd, distance
+from toflib import Plugin, cmd
 import datetime
 import time
 import collections
 
 Mention = collections.namedtuple('Mention', "timestamp author msg pending")
+datetime_now = datetime.datetime.now
 
 
 def timeformat(t):
@@ -56,7 +57,7 @@ class PluginLag(Plugin):
                     "mentions": [],
                     "previous_lag": None
                     }
-        self.data[nick]["last_active"] = datetime.datetime.now()
+        self.data[nick]["last_active"] = datetime_now()
         self.garbage_collect()
 
     def on_join(self, chan, nick):
@@ -66,7 +67,7 @@ class PluginLag(Plugin):
     def add_mention(self, msg_text, author, to, pending=True):
         "Add a mention to the nick"
         self.data[to]["mentions"].append(Mention(
-            timestamp=datetime.datetime.now(),
+            timestamp=datetime_now(),
             author=author,
             msg=msg_text,
             pending=pending
@@ -75,7 +76,7 @@ class PluginLag(Plugin):
 
     def lag(self, nick):
         "Returns the time between now and the oldest pending mention"
-        now = datetime.datetime.now()
+        now = datetime_now()
         if nick in self.data:
             for m in self.data[nick]["mentions"]:
                 if m.pending:
