@@ -10,12 +10,7 @@ from operator import itemgetter
 from datetime import datetime, timedelta
 import re
 
-
-def datetime_now():
-    """
-    A 'now' method that can be patched, unlike the builtin function.
-    """
-    return datetime.now()
+datetime_now = datetime.now
 
 
 class Game(object):
