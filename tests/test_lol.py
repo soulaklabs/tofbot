@@ -4,7 +4,7 @@ from common import TofbotTestCase, set_clock, bot_kick
 from mock import patch
 
 
-class TestEuler(TofbotTestCase):
+class TestLol(TofbotTestCase):
 
     def test_lol_kevin(self):
         self.assertOutput('!kevin', 'pas de Kevin')
