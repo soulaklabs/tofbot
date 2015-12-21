@@ -1,19 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from bot import Tofbot
-import unittest
-from collections import namedtuple
 from httpretty import HTTPretty, httprettified
-from plugins.euler import EulerEvent
 from plugins.jokes import TofadeEvent
 from mock import patch
 import json
-
-TestOrigin = namedtuple('TestOrigin', ['sender', 'nick'])
-
-
-def print_resp(msg):
-    print (" -> %s" % msg)
+from common import TestTofbot, TestOrigin, TofbotTestCase
+from common import bot_input, bot_action, bot_kick
 
 
 def twitter_set_tweet(name, tweet, tweet_id):
@@ -34,115 +26,12 @@ def twitter_set_tweet(name, tweet, tweet_id):
     HTTPretty.register_uri(HTTPretty.GET, url, body=html)
 
 
-class TestTofbot(Tofbot):
-
-    def __init__(self, nick, name, chan, origin):
-        chans = [chan]
-        self.nick = nick
-        Tofbot.__init__(self, nick, name, chans, debug=False)
-        self.chan = chan
-        self.origin = origin
-        self.cb = None
-
-    def msg(self, chan, msg):
-        if self.cb:
-            self.cb(msg)
-        else:
-            print_resp(msg)
-
-    def send(self, msg, origin=None):
-        """
-        Send a message to the bot.
-        origin is a string that overrides the sender's nick.
-        """
-        print ("<-  %s" % msg)
-        if origin is None:
-            origin = self.origin
-        else:
-            origin = TestOrigin('sender', origin)
-        self.dispatch(origin, [msg, 'PRIVMSG', self.chan])
-
-    def kick(self, msg=None):
-        if msg is None:
-            msg = self.nick
-        self.dispatch(self.origin, [msg, 'KICK', self.chan, self.nick])
-
-
-def bot_action(bot, action):
-    msgs = []
-
-    def capture_out(msg):
-        msgs.append(msg)
-
-    bot.cb = capture_out
-    action()
-    return msgs
-
-
-def bot_input(bot, msg):
-    return bot_action(bot, lambda: bot.send(msg))
-
-
-def bot_kick(bot, msg=None):
-    return bot_action(bot, lambda: bot.kick(msg))
-
-
 def set_clock(now_mock, hours=0, minutes=0):
     from datetime import datetime
     now_mock.return_value = datetime(1941, 2, 16, hours, minutes, 0, 0)
 
 
-class TestCase(unittest.TestCase):
-
-    def setUp(self):
-        nick = "testbot"
-        name = "Test Bot"
-        chan = "#chan"
-        self.origin = TestOrigin('sender', 'nick')
-        self.bot = TestTofbot(nick, name, chan, self.origin)
-        self.bot.joined = True
-        cmds = ['!set autoTofadeThreshold 100']
-        for cmd in cmds:
-            bot_input(self.bot, cmd)
-
-    def assertOutputDo(self, outp):
-        if isinstance(outp, str):
-            outp = [outp]
-
-        def wrapper(f):
-            l = bot_action(self.bot, lambda: f())
-            self.assertEqual(l, outp)
-
-        return wrapper
-
-    def assertOutput(self, inp, outp):
-        """
-        Test that a given input produces a given output.
-        """
-        l = bot_input(self.bot, inp)
-        if isinstance(outp, str):
-            outp = [outp]
-        self.assertEqual(l, outp)
-
-    def assertOutputLength(self, msg, n):
-        """
-        Checks that when fed with msg, the bot's answer has length n.
-        """
-        l = bot_input(self.bot, msg)
-        self.assertEqual(len(l), n)
-
-    def assertNoOutput(self, msg):
-        self.assertOutput(msg, [])
-
-    def _find_event(self, clz):
-        """
-        Find an event of a given class in cron.
-        """
-        return ((k, v) for (k, v) in enumerate(self.bot.cron.events)
-                if isinstance(v, clz)).next()
-
-    def _delete_event(self, key):
-        del self.bot.cron.events[key]
+class TestCase(TofbotTestCase):
 
     def test_set_allowed(self):
         msg = "!set autoTofadeThreshold 9000"
@@ -167,37 +56,6 @@ class TestCase(unittest.TestCase):
 
     def test_eightball(self):
         self.assertOutputLength("boule magique, est-ce que blabla ?", 1)
-
-    @httprettified
-    def test_euler(self):
-        euler_nick = 'leonhard'
-
-        def set_score(score):
-            url = "http://projecteuler.net/profile/%s.txt" % euler_nick
-            country = 'country'
-            language = 'language'
-            level = 1
-            text = "%s,%s,%s,Solved %d,%d" % (euler_nick,
-                                              country,
-                                              language,
-                                              score,
-                                              level,
-                                              )
-            HTTPretty.register_uri(HTTPretty.GET, url,
-                                   body=text,
-                                   content_type="text/plain")
-
-        set_score(10)
-        self.bot.send("!euler_add leonhard")
-
-        # Get event to unschedule and manually fire it
-        (event_k, event) = self._find_event(EulerEvent)
-        self._delete_event(event_k)
-
-        self.assertOutput("!euler", "leonhard : Solved 10")
-        set_score(15)
-        l = bot_action(self.bot, event.fire)
-        self.assertEqual(l, ["leonhard : Solved 10 -> Solved 15"])
 
     @httprettified
     def test_expand_tiny(self):
