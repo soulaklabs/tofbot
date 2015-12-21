@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from httpretty import HTTPretty, httprettified
-from plugins.jokes import TofadeEvent
 import json
 from common import TestTofbot, TestOrigin, TofbotTestCase
-from common import bot_input, bot_action, bot_kick, set_clock
+from common import bot_input, bot_kick, set_clock
 
 
 class TestCase(TofbotTestCase):
@@ -32,28 +31,6 @@ class TestCase(TofbotTestCase):
 
     def test_eightball(self):
         self.assertOutputLength("boule magique, est-ce que blabla ?", 1)
-
-    def test_jokes_autotofade(self):
-        (event_k, event) = self._find_event(TofadeEvent)
-
-        self.bot.send('!set autoTofadeThreshold 0')
-        l = bot_action(self.bot, event.fire)
-        self.assertEqual(len(l), 1)
-        self.bot.send('!set autoTofadeThreshold 9000')
-
-    def test_jokes_misc(self):
-        for cmd in ['fortune', 'chuck', 'tofade', 'contrepeterie']:
-            self.assertOutputLength('!%s' % cmd, 1)
-
-    def test_jokes_butters(self):
-        self.bot.send('!set autoTofadeThreshold 0')
-        self.assertOutput("hey %s how are you" % self.bot.nick,
-                          "%s: Ouais, c'est moi !" % self.origin.nick)
-        self.bot.send('!set autoTofadeThreshold 9000')
-
-    def test_joke_riddle(self):
-        self.assertOutputLength("!devinette", 1)
-        self.bot.send('answer?')
 
     def test_sed(self):
         self.bot.send("oho")
