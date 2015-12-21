@@ -306,7 +306,7 @@ def main():
     monitor.daemon = True
     monitor.start()
 
-    openshiftworkarounds.do()
+    openshiftworkarounds.enable()
 
     b.run(host, port)
 

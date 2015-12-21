@@ -34,7 +34,7 @@ class PluginLag(Plugin):
         super(PluginLag, self).__init__(bot)
         self.data = {}
 
-    def gc(self):
+    def garbage_collect(self):
         "Limit memory usage"
         # don't watch more than 20 nicks
         while len(self.data) > 20:
@@ -59,7 +59,7 @@ class PluginLag(Plugin):
                     "previous_lag": None
                     }
         self.data[nick]["last_active"] = datetime.datetime.now()
-        self.gc()
+        self.garbage_collect()
 
     def on_join(self, chan, nick):
         "When a nick joins, mark it as active"
@@ -73,7 +73,7 @@ class PluginLag(Plugin):
             msg=msg_text,
             pending=pending
             ))
-        self.gc()
+        self.garbage_collect()
 
     def lag(self, nick):
         "Returns the time between now and the oldest pending mention"
@@ -98,7 +98,7 @@ class PluginLag(Plugin):
 
         # did I mention anybody?
         if not is_cmd:
-            for nick in self.data:
+            for nick in self.data.keys():
                 if nick != me and nick in words:
                     self.add_mention(msg_text, me, nick)
 
@@ -112,26 +112,13 @@ class PluginLag(Plugin):
             for i in range(len(mentions)):
                 mentions[i] = mentions[i]._replace(pending=False)
 
-    def best_match(self, nick):
-        def norm_dist(x):
-            return float(distance(x, nick))/max(len(nick), len(x))
-        try:
-            best = min(self.data.keys(), key=norm_dist)
-            if norm_dist(best) <= 0.5:
-                return best
-        except ValueError:
-            return None
-
     @cmd(1)
     def cmd_lag(self, chan, args, sender_nick):
         "Report the lag of the given nick"
         who = args[0]
         if who not in self.data:
-            best = self.best_match(who)
-            if best is None:
-                self.say("Pas d'infos sur %s." % who)
-                return
-            who = best
+            self.say("Pas d'infos sur %s." % who)
+            return
 
         lag = self.lag(who)
         if lag is not None:
@@ -150,11 +137,8 @@ class PluginLag(Plugin):
         "Report the recent mentions of the given nick"
         who = args[0]
         if who not in self.data:
-            best = self.best_match(who)
-            if best is None:
-                self.private(sender_nick, "Pas d'infos sur %s." % who)
-                return
-            who = best
+            self.private(sender_nick, "Pas d'infos sur %s." % who)
+            return
 
         mentions = self.data[who]["mentions"]
         if len(mentions) > 0:
