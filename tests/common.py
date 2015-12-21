@@ -29,6 +29,11 @@ def bot_kick(bot, msg=None):
     return bot_action(bot, lambda: bot.kick(msg))
 
 
+def set_clock(now_mock, hours=0, minutes=0):
+    from datetime import datetime
+    now_mock.return_value = datetime(1941, 2, 16, hours, minutes, 0, 0)
+
+
 class TestTofbot(Tofbot):
 
     def __init__(self, nick, name, chan, origin):
