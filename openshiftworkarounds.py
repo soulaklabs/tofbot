@@ -3,18 +3,19 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import SocketServer
 import requests
 import threading
-import time
+from datetime import datetime
 
 
 class S(BaseHTTPRequestHandler):
     def _set_headers(self):
         self.send_response(200)
-        self.send_header('Content-type', 'text/html')
+        self.send_header('Content-type', 'text/plain')
         self.end_headers()
 
     def do_GET(self):
         self._set_headers()
-        self.wfile.write("<html><body>I am not dead!</body></html>")
+        uptime = str(datetime.now() - self.server.start_time).split('.')[0]
+        self.wfile.write("Tofbot uptime: %s" % uptime)
 
     def do_HEAD(self):
         self._set_headers()
@@ -25,21 +26,11 @@ def serve(server_class=HTTPServer, handler_class=S):
     ip = os.getenv('OPENSHIFT_PYTHON_IP', '')
     server_address = (ip, port)
     httpd = server_class(server_address, handler_class)
+    httpd.start_time = datetime.now()
     httpd.serve_forever()
-
-
-def self_query():
-    host = os.getenv("OPENSHIFT_APP_DNS", "127.0.0.1")
-    while True:
-        time.sleep(3600)
-        requests.get("http://" + host)
 
 
 def enable():
     server = threading.Thread(target=serve)
     server.daemon = True
     server.start()
-
-    keepalive = threading.Thread(target=self_query)
-    keepalive.daemon = True
-    keepalive.start()
