@@ -88,7 +88,7 @@ class Tofbot(Bot):
         self.lolRateDepth = 8
         self.cron = Cron()
         self.lastTGtofbot = 0
-        self.memoryDepth = 20
+        self.memoryDepth = 50
         self.last_interaction = int(time.time())
         self.plugins = self.load_plugins()
 
