@@ -10,6 +10,7 @@ from toflib import Plugin, cmd
 import random
 from lis import *
 
+
 class PluginLisp(Plugin):
     "A plugin that provides a minimalistic Lisp interpreter"
 
@@ -21,11 +22,7 @@ class PluginLisp(Plugin):
             val = eval(parse(line))
             s = lispstr(val)
             self.say(" => " + s)
-            #self.private(sender_nick, s)
         except SyntaxError as (err):
             self.say("Syntax error: " + err)
-            #self.private(sender_nick, "Syntax error: " + err)
         except:
             self.say("Error")
-            #self.private(sender_nick, "Error")
-
