@@ -6,11 +6,12 @@
 # If we meet some day, and you think this stuff is worth it,
 # you can buy us a beer in return.
 #
-# Copyright (c) 2011,2015 Etienne Millon <etienne.millon@gmail.com>
+# Copyright (c) 2011,2016 Etienne Millon <etienne.millon@gmail.com>
 #                    Martin Kirchgessner <martin.kirch@gmail.com>
 #                    Nicolas Dumazet <nicdumz.commits@gmail.com>
 #                    Quentin Sabah <quentin.sabah@gmail.com>
 #                    Christophe-Marie Duquesne <chm.duquesne@gmail.com>
+#                    Guillaume Piolat <guillaume.piolat@gmail.com>
 
 """
 Usage: ./bot.py
@@ -52,6 +53,7 @@ import plugins.like
 import plugins.ponce
 import plugins.lag
 import plugins.risoli
+import plugins.lisp
 
 random.seed()
 
