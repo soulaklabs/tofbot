@@ -22,7 +22,7 @@ class PluginLisp(Plugin):
             val = eval(parse(line))
             s = lispstr(val)
             self.say(" => " + s)
-        except SyntaxError as (err):
-            self.say("Syntax error: " + err)
-        except:
-            self.say("Error")
+#           self.private(sender_nick, " => " + s)
+        except Exception, err:
+            self.say("Syntax error: " + str(err))
+#           self.private(sender_nick, "Syntax error: " + str(err))
