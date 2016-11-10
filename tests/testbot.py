@@ -53,4 +53,6 @@ class TestCase(TofbotTestCase):
     def test_elle(self):
         del self.bot.plugins["jokes"]
         self.bot.send("!set autoTofadeThreshold 0")
-        self.assertOutputContains("elle a les yeux revolver", "Le vrai win c'est ♥")
+        self.assertOutputContains(
+                "elle a les yeux revolver",
+                "Le vrai win c'est ♥")
