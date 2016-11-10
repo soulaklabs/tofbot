@@ -110,6 +110,16 @@ class TofbotTestCase(unittest.TestCase):
             outp = [outp]
         self.assertEqual(l, outp)
 
+    def assertOutputContains(self, inp, outp):
+        """
+        Test that a given input produces a given output (among others)
+        """
+        l = bot_input(self.bot, inp)
+        if isinstance(outp, str):
+            outp = [outp]
+        for o in outp:
+            self.assertIn(o, l)
+
     def assertOutputLength(self, msg, n):
         """
         Checks that when fed with msg, the bot's answer has length n.
