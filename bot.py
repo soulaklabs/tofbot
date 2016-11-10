@@ -50,7 +50,7 @@ import plugins.sed
 import plugins.rick
 import plugins.expand
 import plugins.like
-import plugins.ponce
+import plugins.elle
 import plugins.lag
 import plugins.risoli
 import plugins.lisp

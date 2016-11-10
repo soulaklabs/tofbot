@@ -124,9 +124,9 @@ class Plugin(object):
         "Is it a good time for a tofade"
         threshold = self.bot.autoTofadeThreshold
         if has_context:
-            threshold = threshold / 2
+            threshold = int(threshold * 0.9)
         return (time.time() - self.bot.lastTGtofbot >=
-                self.bot.TGtime * 60 and
+                self.bot.TGtime * 10 * 60 and
                 random.randint(0, 100) > threshold)
 
     def load(self, data):

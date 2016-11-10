@@ -18,7 +18,7 @@ class TestEuler(TofbotTestCase):
 
     def test_jokes_butters(self):
         self.bot.send('!set autoTofadeThreshold 0')
-        self.assertOutput("hey %s how are you" % self.bot.nick,
+        self.assertOutputContains("hey %s how are you" % self.bot.nick,
                           "%s: Ouais, c'est moi !" % self.origin.nick)
         self.bot.send('!set autoTofadeThreshold 9000')
 
