@@ -33,7 +33,7 @@ class PluginLike(Plugin):
             return
         self.scores[nick][0] += n
         self.scores[nick][1] += 1
-        self.say(nick + ": " + "★" * n + "☆" * (4-n))
+        self.say(nick + ": " + "★" * n + "☆" * (5-n))
 
     def avg_stars(self, nick):
         if nick not in self.scores or self.scores[nick][1] == 0:
@@ -44,7 +44,7 @@ class PluginLike(Plugin):
     def cmd_starz(self, _chan, args, sender_nick):
         "Give starz to someone"
         try:
-            n = min(max(int(args[0]), 0), 4)
+            n = min(max(int(args[0]), 1), 5)
         except ValueError:
             return
         if len(args) >= 2:
