@@ -44,11 +44,6 @@ class TestCase(TofbotTestCase):
         self.assertOutputLength('!ggg', 0)
         self.bot.send('oh oh', origin='alfred')
         self.bot.send('!like')
-        # CES TESTS SONT OBSOLETES
-        # self.assertOutput('!ggg',
-        #                   "alfred est le Good Guy Greg du moment avec 3.0 "
-        #                   "starz de moyenne")
-        # self.assertOutput('!score alfred', 'alfred: 3.0 starz de moyenne.')
         self.assertOutput('!score michel', "michel n'a pas de starz.")
 
     def test_elle(self):
