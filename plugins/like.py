@@ -11,6 +11,7 @@ from collections import deque
 from toflib import cmd, Plugin
 import random
 
+
 class PluginLike(Plugin):
 
     def __init__(self, bot):
