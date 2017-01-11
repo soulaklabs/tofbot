@@ -9,6 +9,7 @@
 
 from collections import deque
 from toflib import cmd, Plugin
+import random
 
 
 class PluginLike(Plugin):
@@ -59,7 +60,7 @@ class PluginLike(Plugin):
         "Alias for '!starz 3 <previous speaker>'"
         if sender_nick != self.previous_speaker:
             if self.previous_speaker is not None:
-                self.give(3, self.previous_speaker)
+                self.give(random.randint(3, 4), self.previous_speaker)
 
     @cmd(1)
     def cmd_score(self, _chan, args, _sender_nick):
