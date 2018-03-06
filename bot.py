@@ -54,6 +54,7 @@ import plugins.elle
 import plugins.lag
 import plugins.risoli
 import plugins.lisp
+import plugins.amour
 
 random.seed()
 
