@@ -55,6 +55,7 @@ import plugins.lag
 import plugins.risoli
 import plugins.lisp
 import plugins.amour
+import plugins.bar
 
 random.seed()
 
@@ -282,9 +283,9 @@ def main():
     host = os.getenv("TOFBOT_SERVER", "irc.freenode.net")
     port = int(os.getenv("TOFBOT_PORT", "6667"))
     chan = os.getenv("TOFBOT_CHAN", "#soulakdev").split(",")
-    nick = os.getenv("TOFBOT_NICK", "tofbot")
+    nick = os.getenv("TOFBOT_NICK", "tofbot3")
     password = os.getenv("TOFBOT_PASSWD", None)
-    name = os.getenv("TOFBOT_NAME", "tofbot")
+    name = os.getenv("TOFBOT_NAME", "tofbot3")
     debug = bool(os.getenv("TOFBOT_DEBUG", ""))
     timeout = int(os.getenv("TOFBOT_TIMEOUT", "240"))
 
@@ -312,6 +313,7 @@ def main():
     openshiftworkarounds.enable()
 
     b.run(host, port)
+
 
 if __name__ == "__main__":
     main()
