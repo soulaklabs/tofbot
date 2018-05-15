@@ -283,9 +283,9 @@ def main():
     host = os.getenv("TOFBOT_SERVER", "irc.freenode.net")
     port = int(os.getenv("TOFBOT_PORT", "6667"))
     chan = os.getenv("TOFBOT_CHAN", "#soulakdev").split(",")
-    nick = os.getenv("TOFBOT_NICK", "tofbot3")
+    nick = os.getenv("TOFBOT_NICK", "tofbot")
     password = os.getenv("TOFBOT_PASSWD", None)
-    name = os.getenv("TOFBOT_NAME", "tofbot3")
+    name = os.getenv("TOFBOT_NAME", "tofbot")
     debug = bool(os.getenv("TOFBOT_DEBUG", ""))
     timeout = int(os.getenv("TOFBOT_TIMEOUT", "240"))
 

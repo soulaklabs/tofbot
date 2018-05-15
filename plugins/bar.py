@@ -66,7 +66,7 @@ class PluginBar(Plugin):
     @cmd(1, 100)
     def cmd_bar(self, _chan, _args, sender_nick):
         "envoie un email aux grelakins"
-        heure = _args[0]
+        heure = _args[0].decode('utf-8')
         lieu = ' '.join(_args[1:]).decode('utf-8')
         lieu = lieu.lower().strip().replace(" ", "")
         if re.match(r"(1[6-9]|2[0-4])+([hH]$|([hH]+" +
@@ -76,19 +76,19 @@ class PluginBar(Plugin):
             # avant c'est être alcoolique
             for cle, valeur in self.liste_bar.items():
                 if lieu in valeur:  # teste si le bar proposé est cool
-                    from_address = [u"Honorable tofbot",
-                                    "tofbot@ouahpiti.info"]
+                    from_address = [u"Honorable tofbot", os.getenv(
+                        "TOFBOT_MAIL", "")]
                     pwd = ""
                     recipient = [u"Michels", os.getenv(
-                        "TOFBOT_MAIL", "grelakins@googlegroups.com")]
+                        "TOFBOT_MAILINGLIST", "")]
                     subject = u"Bar ce soir"
-                    content = """Bonsoir les jeunes,
+                    content = u"""Bonsoir les jeunes,
 Aujourd'hui, certains Michels vont au bar %s à %s.
 Rejoignez les!
 
 Tofbot, au service de %s
                     """ % (cle, heure, sender_nick)
-                    content = content.decode('utf-8')
+                    content = content.encode('utf-8')
                     Charset.add_charset('utf-8',
                                         Charset.QP, Charset.QP, 'utf-8')
                     msg = MIMEMultipart('alternative')
@@ -105,7 +105,7 @@ Tofbot, au service de %s
                     g = Generator(str_out, False)
                     g.flatten(msg)
                     mail_server = "localhost"
-                    server = smtplib.SMTP(mail_server,  25)
+                    server = smtplib.SMTP(mail_server, 25)
                     server.ehlo()
                     server.sendmail(from_address[1], recipient[1],
                                     str_out.getvalue())
