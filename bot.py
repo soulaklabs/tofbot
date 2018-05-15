@@ -55,6 +55,7 @@ import plugins.lag
 import plugins.risoli
 import plugins.lisp
 import plugins.amour
+import plugins.bar
 
 random.seed()
 
@@ -312,6 +313,7 @@ def main():
     openshiftworkarounds.enable()
 
     b.run(host, port)
+
 
 if __name__ == "__main__":
     main()
