@@ -53,7 +53,12 @@ class PluginBar(Plugin):
                          u'cafédunord'],
                      }
         self.liste_bar = liste_bar
-        self.liste_grelakins = ("marty_", "p0nce", "piti", "quentin", "TaTaaa")
+        self.liste_grelakins = ("marty_",
+                                "p0nce",
+                                "Pebz",
+                                "piti",
+                                "quentin",
+                                "TaTaaa")
         self.date_bar = ""
 
     @cmd(0)
