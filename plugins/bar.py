@@ -10,6 +10,7 @@ import re
 import smtplib
 import os
 import time
+import hashlib
 from email import Charset
 from email import Header
 from email.mime.multipart import MIMEMultipart
@@ -53,12 +54,18 @@ class PluginBar(Plugin):
                          u'cafédunord'],
                      }
         self.liste_bar = liste_bar
-        self.liste_grelakins = ("marty_",
-                                "p0nce",
-                                "Pebz",
-                                "piti",
-                                "quentin",
-                                "TaTaaa")
+        self.liste_grelakins = ("df8aa692a608e3feb1e543"
+                                "e6bf7d85d24f5bcdf483afb90c5fb05fdd",
+                                "3176a98d9ea2e86560a11e17df5"
+                                "486f46a8d9c126ec5e597250b63f9",
+                                "bcf917ae806d717c9b30e26f2b"
+                                "4db42877a8227e8ca45a41ca09a561",
+                                "d6253e761810b4bb6fa2bed4"
+                                "41b8c6a570b28a17d2a099246b72b076",
+                                "9cc6bfeb92c01ab30d29bf32"
+                                "e2e95d1951fcbc9831e0dcf164cbf672",
+                                "564e41e2e05847deb9be779b"
+                                "7362f56a1449bb1e644929c372966dbf")
         self.date_bar = ""
 
     @cmd(0)
@@ -75,7 +82,7 @@ class PluginBar(Plugin):
     def cmd_bar(self, _chan, _args, sender_nick):
         "envoie un email aux grelakins"
         # vérification que l'invocateur soit un grelakins
-        if sender_nick in self.liste_grelakins:
+        if hashlib.sha224(sender_nick).hexdigest() in self.liste_grelakins:
             # vérification que c'est la première invocation du messager
             if self.date_bar != str(time.strftime('%d/%m/%y',
                                                   time.localtime())):
