@@ -4,8 +4,8 @@ from testbot import TestTofbot, print_resp
 class Origin:
     pass
 
-chan = '#test'
 
+chan = '#test'
 origin = Origin()
 origin.sender = 'TestTofbot'
 
@@ -29,8 +29,8 @@ def cb_lines(n):
 def cb_error(msg):
     return cb_lines(0)
 
-b = TestTofbot('ohohOHoh_bot', 'Le tof', chan, origin)
 
+b = TestTofbot('ohohOHoh_bot', 'Le tof', chan, origin)
 b.send("End of /MOTD command.", cb=cb_error)
 b.send("test", cb=cb_error)
 b.send("!help", cb=cb_lines(4))

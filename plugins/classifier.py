@@ -109,9 +109,9 @@ class SqliteBackend(StorageBackend):
                 WHERE class=? AND feature=?
                 """, (c, f)
                 )
-        l = list(cursor)
-        if l:
-            res = int(l[0][0])
+        entries = list(cursor)
+        if entries:
+            res = int(entries[0][0])
         cursor.close()
         return res
 

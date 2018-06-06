@@ -41,7 +41,7 @@ class PluginDassin(Plugin):
                         best = song[i + 1]
                         minDist = dist
                     i += 1
-            except:
+            except IndexError:
                 pass
 
         if len(best) > 3 and minDist < (len(searched) / 3):

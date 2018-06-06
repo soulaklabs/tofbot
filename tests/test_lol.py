@@ -45,5 +45,5 @@ class TestLol(TofbotTestCase):
 
     def test_lol_kick(self):
         self.bot.send('lol', origin='michel')
-        l = bot_kick(self.bot)
-        self.assertIn('Au passage, michel est un sacré Kevin', l)
+        line = bot_kick(self.bot)
+        self.assertIn('Au passage, michel est un sacré Kevin', line)

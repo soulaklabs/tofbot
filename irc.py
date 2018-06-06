@@ -54,11 +54,8 @@ class Bot(asynchat.async_chat):
         self.sending.acquire()
         asynchat.async_chat.initiate_send(self)
         self.sending.release()
-    # def push(self, *args, **kargs):
-    #     asynchat.async_chat.push(self, *args, **kargs)
 
     def __write(self, args, text=None):
-        # print 'PUSH: %r %r %r' % (self, args, text)
         try:
             if text is not None:
                 # 510 because CR and LF count too, as nyuszika7h points out
@@ -184,26 +181,6 @@ class Bot(asynchat.async_chat):
     def notice(self, dest, text):
         self.write(('NOTICE', dest), text)
 
-    def error(self, origin):
-        try:
-            import traceback
-            trace = traceback.format_exc()
-            print trace
-            lines = list(reversed(trace.splitlines()))
-
-            report = [lines[0].strip()]
-            for line in lines:
-                line = line.strip()
-                if line.startswith('File "/'):
-                    report.append(line[0].lower() + line[1:])
-                    break
-            else:
-                report.append('source unknown')
-
-            self.msg(origin.sender, report[0] + ' (' + report[1] + ')')
-        except:
-            self.msg(origin.sender, "Got an error.")
-
 
 class TestBot(Bot):
     def f_ping(self, origin, match, args):
@@ -218,9 +195,8 @@ class TestBot(Bot):
 
 
 def main():
-    # bot = TestBot('testbot', ['#d8uv.com'])
-    # bot.run('irc.freenode.net')
     print __doc__
+
 
 if __name__ == "__main__":
     main()

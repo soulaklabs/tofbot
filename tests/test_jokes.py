@@ -8,8 +8,8 @@ class TestEuler(TofbotTestCase):
         (event_k, event) = self._find_event(TofadeEvent)
 
         self.bot.send('!set autoTofadeThreshold 0')
-        l = bot_action(self.bot, event.fire)
-        self.assertEqual(len(l), 1)
+        line = bot_action(self.bot, event.fire)
+        self.assertEqual(len(line), 1)
         self.bot.send('!set autoTofadeThreshold 9000')
 
     def test_jokes_misc(self):
