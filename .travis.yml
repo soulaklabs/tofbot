@@ -6,12 +6,3 @@ install:
 script:
 - pycodestyle --exclude=tofdata .
 - nosetests
-deploy:
-  provider: openshift
-  user: chmd@chmd.fr
-  password:
-    secure: hnbME+UfIoM1V4d8PDgM9ZOVYC2OsBbdNrHLXAX3bXuNUOU/x79AHJC9R2AQpdwmt1wZ4Il82OkaiLeSYh5tD1jM+zVL70i5v9C1V3mOwW3PGenq0gcXOf00LaOBel7X2ujWy/+X2KMBkj18GKqtyUIpSvSkbAh0D341PXxJ0jlLPGvjVB3YV7s4M4PUv7KN8q1dvqJlVn9YsjJsia92zFrZCaYBOSmh0q4Yl7utmkV4AF4mBaokpMiP6tD4eD8SzJCNvBT9ETlVvczVXbll77JqtbPaKifrF7Fw6F/v6rSOwgx/XkMdZDy1EdCJ9nii9U2yKe5gtgJWPXYxT2M7HbeKSGYYYLeqKgiylj9TjO+ziEaP2vdr3t0oMrL1FvP8ZQj1bhMUTppY+Ei4wqDfUJFwMz47UR7l5cxc4jRt6hjP+Jcw3DRcBVARfuW4tDp8mprqdHf8RcH9cm9JZNqkD+nA7xNoC1Y9zeJI9t9y+b3uNvqkSsn/0qaYUVoaAM5dUqFuBEiNo58QI5edK56u+MK8AzegomKqxDlw22teGgYjtRCv8KeLw19AgvqSaqUP56TKiqMBWdX065gs7Ry9/5GfVRrnRqgRQKZuFd3TXxzET79EAJ/NMvQOFdHNILjNccDQC0DjQc5lhu4sy0vAnvGedNhkbzTgTcap0amnj+c=
-  app: tofbot
-  domain: chmd
-  on:
-    repo: soulaklabs/tofbot
