@@ -33,5 +33,5 @@ class TestEuler(TofbotTestCase):
 
         self.assertOutput("!euler", "leonhard : Solved 10")
         set_score(15)
-        l = bot_action(self.bot, event.fire)
-        self.assertEqual(l, ["leonhard : Solved 10 -> Solved 15"])
+        line = bot_action(self.bot, event.fire)
+        self.assertEqual(line, ["leonhard : Solved 10 -> Solved 15"])

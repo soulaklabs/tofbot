@@ -7,4 +7,4 @@ unidecode
 mock
 nose
 coverage
-pep8
+pycodestyle

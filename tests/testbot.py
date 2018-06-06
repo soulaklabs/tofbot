@@ -15,12 +15,12 @@ class TestCase(TofbotTestCase):
                           "autoTofadeThreshold = 9000")
 
     def test_kick(self):
-        l = bot_kick(self.bot)
-        self.assertEqual(l, ["respawn, LOL"])
+        line = bot_kick(self.bot)
+        self.assertEqual(line, ["respawn, LOL"])
 
     def test_kick_reason(self):
-        l = bot_kick(self.bot, "tais toi")
-        self.assertEqual(l, ["comment ça, tais toi ?"])
+        line = bot_kick(self.bot, "tais toi")
+        self.assertEqual(line, ["comment ça, tais toi ?"])
 
     def test_dassin(self):
         self.assertOutput("tu sais",

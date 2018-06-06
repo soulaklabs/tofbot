@@ -68,7 +68,7 @@ class PluginRisoli(Plugin):
         self._register_leave(nick)
 
     def handle_msg(self, msg_text, chan, nick):
-        m = re.match('%s: (\d+)' % re.escape(self.bot.nick), msg_text)
+        m = re.match('%s: (\\d+)' % re.escape(self.bot.nick), msg_text)
         if not m:
             return
         if not self._game:

@@ -52,12 +52,12 @@ class PluginExpand(Plugin):
             try:
                 exp = urlExpand(url)
                 self.say(exp)
-            except:
+            except (requests.exceptions.RequestException, requests):
                 pass
 
         if is_video(url):
             try:
                 t = getTitle(url)
                 self.say(t)
-            except:
+            except (requests.exceptions.RequestException, AttributeError):
                 pass

@@ -46,7 +46,7 @@ class PluginEuler(Plugin):
                 data = response.text.split(',')
                 if(len(data) >= 4):
                     scores[nick] = data[3]
-        except:
+        except requests.ConnectionError:
             pass
         return scores
 

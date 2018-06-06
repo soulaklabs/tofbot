@@ -96,8 +96,8 @@ class TofbotTestCase(unittest.TestCase):
             outp = [outp]
 
         def wrapper(f):
-            l = bot_action(self.bot, lambda: f())
-            self.assertEqual(l, outp)
+            line = bot_action(self.bot, lambda: f())
+            self.assertEqual(line, outp)
 
         return wrapper
 
@@ -105,27 +105,27 @@ class TofbotTestCase(unittest.TestCase):
         """
         Test that a given input produces a given output.
         """
-        l = bot_input(self.bot, inp)
+        line = bot_input(self.bot, inp)
         if isinstance(outp, str):
             outp = [outp]
-        self.assertEqual(l, outp)
+        self.assertEqual(line, outp)
 
     def assertOutputContains(self, inp, outp):
         """
         Test that a given input produces a given output (among others)
         """
-        l = bot_input(self.bot, inp)
+        line = bot_input(self.bot, inp)
         if isinstance(outp, str):
             outp = [outp]
         for o in outp:
-            self.assertIn(o, l)
+            self.assertIn(o, line)
 
     def assertOutputLength(self, msg, n):
         """
         Checks that when fed with msg, the bot's answer has length n.
         """
-        l = bot_input(self.bot, msg)
-        self.assertEqual(len(l), n)
+        line = bot_input(self.bot, msg)
+        self.assertEqual(len(line), n)
 
     def assertNoOutput(self, msg):
         self.assertOutput(msg, [])
