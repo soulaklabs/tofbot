@@ -8,27 +8,15 @@
 # Copyright (c) 2011 Etienne Millon <etienne.millon@gmail.com>
 #                    Martin Kirchgessner <martin.kirch@gmail.com>
 #                    Nicolas Dumazet <nicdumz.commits@gmail.com>
-
-from tofdata.chucknorris import chuckNorrisFacts
-from tofdata.riddles import riddles
-from tofdata.tofades import tofades
-from tofdata.fortunes import fortunes
-from tofdata.contrepeteries import contrepeteries
-from toflib import cmd, InnocentHand, RiddleTeller, Plugin, CronEvent
-import random
 import time
 from datetime import timedelta
 
+from tofdata.chucknorris import chuckNorrisFacts
+from tofdata.riddles import riddles
+from tofdata.fortunes import fortunes
+from tofdata.contrepeteries import contrepeteries
+from toflib import cmd, InnocentHand, RiddleTeller, Plugin, CronEvent
 
-class TofadeEvent(CronEvent):
-
-    def __init__(self, plugin):
-        CronEvent.__init__(self, plugin)
-        self.period = timedelta(seconds=1)
-
-    def fire(self):
-        if self.plugin.tofade_time(has_context=False):
-            self.plugin.say(self.plugin._tofades())
 
 
 class PluginJokes(Plugin):
@@ -36,14 +24,11 @@ class PluginJokes(Plugin):
     def __init__(self, bot):
         Plugin.__init__(self, bot)
         self._chuck = InnocentHand(chuckNorrisFacts)
-        self._tofades = InnocentHand(tofades)
         self._riddles = InnocentHand(riddles)
         self._fortunes = InnocentHand(fortunes)
         self._contrepeteries = InnocentHand(contrepeteries)
         bot._mutable_attributes["autoTofadeThreshold"] = int
         bot._mutable_attributes["riddleMaxDist"] = int
-        ev = TofadeEvent(self)
-        self.bot.cron.schedule(ev)
 
     @cmd(0)
     def cmd_fortune(self, chan, args, sender_nick):
@@ -56,20 +41,9 @@ class PluginJokes(Plugin):
         self.say(self._chuck())
 
     @cmd(0)
-    def cmd_tofade(self, chan, args, sender_nick):
-        "Tof randomly"
-        self.say(self._tofades())
-
-    @cmd(0)
     def cmd_contrepeterie(self, chan, args, sender_nick):
         "Tell a contrepeterie"
         self.say(self._contrepeteries())
-
-    @cmd(1)
-    def cmd_tofme(self, chan, args, sender_nick):
-        "Tof to someone (give a nickname)"
-        who = args[0]
-        self.say("%s : %s" % (who, self._tofades()))
 
     @cmd(0)
     def cmd_devinette(self, chan, args, sender_nick):
@@ -77,28 +51,10 @@ class PluginJokes(Plugin):
         if not self.active_riddle():
             self.devinette = self.random_riddle(chan)
 
-    def on_join(self, chan, nick):
-        if nick != self.bot.nick:
-            self.cmd_tofme(chan, [nick])
-
-    def on_leave(self, chan, nick):
-        if self.tofade_time(has_context=False):
-            self.say("%s est un sale lâcheur." % nick)
-
-    def on_quit(self, nick):
-        if self.tofade_time(has_context=False):
-            self.say("%s s'est fait harakiri." % nick)
-
     def handle_msg(self, msg_text, chan, nick):
         stripped = msg_text.strip().lower()
-        if stripped == "tg " + self.bot.nick:
-            self.bot.lastTGtofbot = time.time()
-        elif stripped == "gg " + self.bot.nick:
-            self.bot.lastTGtofbot = 0
-        elif stripped.find(self.bot.nick, 1) >= 0 and self.tofade_time():
+        if stripped.find(self.bot.nick, 1) >= 0 and self.tofade_time():
             self.say(nick + ": Ouais, c'est moi !")
-        elif self.tofade_time(has_context=False):
-            self.cmd_tofme(chan, [nick])
         if self.active_riddle():
             itsOver = self.devinette.wait_answer(chan, msg_text)
             if itsOver:
