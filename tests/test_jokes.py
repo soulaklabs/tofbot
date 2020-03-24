@@ -1,19 +1,10 @@
 from common import TofbotTestCase, bot_action
-from plugins.jokes import TofadeEvent
 
 
 class TestEuler(TofbotTestCase):
 
-    def test_jokes_autotofade(self):
-        (event_k, event) = self._find_event(TofadeEvent)
-
-        self.bot.send('!set autoTofadeThreshold 0')
-        line = bot_action(self.bot, event.fire)
-        self.assertEqual(len(line), 1)
-        self.bot.send('!set autoTofadeThreshold 9000')
-
     def test_jokes_misc(self):
-        for cmd in ['fortune', 'chuck', 'tofade', 'contrepeterie']:
+        for cmd in ['fortune', 'chuck', 'contrepeterie']:
             self.assertOutputLength('!%s' % cmd, 1)
 
     def test_jokes_butters(self):
