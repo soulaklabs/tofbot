@@ -18,7 +18,6 @@ from tofdata.contrepeteries import contrepeteries
 from toflib import cmd, InnocentHand, RiddleTeller, Plugin, CronEvent
 
 
-
 class PluginJokes(Plugin):
 
     def __init__(self, bot):
