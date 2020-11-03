@@ -21,26 +21,3 @@ The bot reads its configuration from the environment. Relevant variables:
 Launch with
 
     python bot.py
-
-Deployment
-----------
-
-You need an [openshift](https://www.openshift.com/) account.
-
-    rhc setup
-    rhc app create tofbot python-2.7
-    git clone https://github.com/tofbot/tofbot.git
-    git remote add openshift -f <openshift-git-repo-url>
-    git merge openshift/master -s recursive -X ours
-    git rm setup.py wsgi.py
-    git commit -a -m "removing unused openshift files"
-    rhc env set TOFBOT_NICK=bla --app tofbot
-    rhc env set TOFBOT_CHAN=\#bla --app tofbot
-    rhc env set TOFBOT_CHAN=irc.freenode.net --app tofbot
-    rhc env set TOFBOT_PORT=6667 --app tofbot
-    git push openshift HEAD
-
-That's all, folks.
-
-This bot serves something to make openshift happy. See
-[http://tofbot-chmd.rhcloud.com](http://tofbot-chmd.rhcloud.com)!
