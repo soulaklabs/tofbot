@@ -11,7 +11,7 @@ The bot reads its configuration from the environment. Relevant variables:
     Variable        Default if unspecified  Comment
     TOFBOT_SERVER   irc.freenode.net        -
     TOFBOT_PORT     6667                    -
-    TOFBOT_CHAN     #soulakins              Accepts a comma separated list
+    TOFBOT_CHAN     #soulakdev              Accepts a comma separated list
     TOFBOT_NICK     tofbot                  -
     TOFBOT_PASSWD   -                       -
     TOFBOT_NAME     tofbot                  -
