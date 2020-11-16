@@ -32,7 +32,6 @@ import traceback
 import threading
 import time
 import signal
-import openshiftworkarounds
 from toflib import _simple_dispatch, urls_in, Cron, CronEvent
 
 import plugins.help
@@ -309,8 +308,6 @@ def main():
     monitor = threading.Thread(target=kill_if_disconnected, args=(b, timeout))
     monitor.daemon = True
     monitor.start()
-
-    openshiftworkarounds.enable()
 
     b.run(host, port)
 
