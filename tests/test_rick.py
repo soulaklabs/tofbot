@@ -11,5 +11,5 @@ class TestRick(TofbotTestCase):
         response = '<html><head><title>%s</title></head></html>' % title
         HTTPretty.register_uri(HTTPretty.GET, url, body=response)
         HTTPretty.register_uri(HTTPretty.HEAD, url)
-        self.assertOutput("Keyboard cat v2: %s" % url,
+        self.assertOutputContains("Keyboard cat v2: %s" % url,
                           ["We're no strangers to love...", title])

@@ -23,5 +23,5 @@ contrepeteries = [
 if __name__ == "__main__":
     from bot import InnocentHand
     joker = InnocentHand(contrepeteries)
-    print joker()
-    print joker(1)
+    print(joker())
+    print(joker(1))

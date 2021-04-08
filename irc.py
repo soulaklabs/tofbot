@@ -35,8 +35,8 @@ class Origin(object):
 class Bot(asynchat.async_chat):
     def __init__(self, nick, name, channels, password=None):
         asynchat.async_chat.__init__(self)
-        self.set_terminator('\n')
-        self.buffer = ''
+        self.set_terminator(b"\n")
+        self.buffer = b""
 
         self.nick = nick
         self.user = nick
@@ -57,36 +57,39 @@ class Bot(asynchat.async_chat):
 
     def __write(self, args, text=None):
         try:
+            data = b""
             if text is not None:
                 # 510 because CR and LF count too, as nyuszika7h points out
-                self.push((' '.join(args) + ' :' + text)[:510] + '\r\n')
+                data = bytes((" ".join(args) + " :" + text)[:510] + "\r\n",encoding='utf8')
             else:
-                self.push(' '.join(args)[:510] + '\r\n')
-        except IndexError:
-            pass
+                data = bytes((" ".join(args)[:510] + "\r\n"),encoding='utf8')
+            self.push(data)
+        except Exception as e:
+            print("Error: {0}".format(e), file=sys.stderr)
+            print(traceback.format_exc(), file=sys.stderr)
 
     def write(self, args, text=None):
 
         # This is a safe version of __write
         def safe(input):
-            input = input.replace('\n', '')
-            input = input.replace('\r', '')
-            return input.encode('utf-8')
+            if input is None:
+                return None
+            else:
+                return input.replace('\n', '').replace('\r', '')
         try:
             args = [safe(arg) for arg in args]
-            if text is not None:
-                text = safe(text)
+            text = safe(text)
             self.__write(args, text)
-        except Exception, e:
-            pass
+        except Exception as e:
+            print("Error in safe({0},{1}): {2}".format(args,text,e), file=sys.stderr)
+            print(traceback.format_exc(), file=sys.stderr)
 
     def run(self, host, port=6667):
         self.initiate_connect(host, port)
 
     def initiate_connect(self, host, port):
         if self.verbose:
-            message = 'Connecting to %s:%s...' % (host, port)
-            print >> sys.stderr, message,
+            print('Connecting to {0}:{1}...'.format(host, port), file=sys.stderr)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect((host, port))
         try:
@@ -96,41 +99,50 @@ class Bot(asynchat.async_chat):
 
     def handle_connect(self):
         if self.verbose:
-            print >> sys.stderr, 'connected!'
+            print("Connected!", file=sys.stderr)
         if self.password:
-            self.write(('PASS', self.password))
-        self.write(('NICK', self.nick))
-        self.write(('USER', self.user, '+iw', self.nick), self.name)
+            self.push(("PASS", self.password))
+        self.write(("NICK", self.nick))
+        self.write(("USER", self.user, "+iw", self.nick), self.name)
 
     def handle_close(self):
         self.close()
-        print >> sys.stderr, 'Closed!'
+        print("Closed!", file=sys.stderr)
+
+    def handle_error(self):
+        try:
+            raise
+        except (KeyboardInterrupt, SystemExit, asyncore.ExitNow):
+            raise
+        except:
+            print(traceback.format_exc(), file=sys.stderr)
+        self.close()
 
     def collect_incoming_data(self, data):
         self.buffer += data
 
     def found_terminator(self):
         line = self.buffer
-        if line.endswith('\r'):
+        if line.endswith(b"\r"):
             line = line[:-1]
-        self.buffer = ''
+        self.buffer = b""
 
-        # print 'GOT:', repr(line)
-        if line.startswith(':'):
-            source, line = line[1:].split(' ', 1)
+        line = str(line, 'utf8')
+
+        if line.startswith(":"):
+            source, line = line[1:].split(" ", 1)
         else:
             source = None
 
-        if ' :' in line:
-            argstr, text = line.split(' :', 1)
+        if " :" in line:
+            argstr, text = line.split(" :", 1)
         else:
-            argstr, text = line, ''
+            argstr, text = line, ""
         args = argstr.split()
-
         origin = Origin(self, source, args)
         self.dispatch(origin, tuple([text] + args))
 
-        if args[0] == 'PING':
+        if args[0] == "PING":
             self.write(('PONG', text))
 
     def dispatch(self, origin, args):
@@ -138,18 +150,6 @@ class Bot(asynchat.async_chat):
 
     def msg(self, recipient, text):
         self.sending.acquire()
-
-        # Cf. http://swhack.com/logs/2006-03-01#T19-43-25
-        if isinstance(text, unicode):
-            try:
-                text = text.encode('utf-8')
-            except UnicodeEncodeError, e:
-                text = e.__class__ + ': ' + str(e)
-        if isinstance(recipient, unicode):
-            try:
-                recipient = recipient.encode('utf-8')
-            except UnicodeEncodeError, e:
-                return
 
         # No messages within the last 3 seconds? Go ahead!
         # Otherwise, wait so it's been at least 0.8 seconds + penalty
@@ -169,17 +169,14 @@ class Bot(asynchat.async_chat):
                 self.sending.release()
                 return
 
-        def safe(input):
-            input = input.replace('\n', '')
-            return input.replace('\r', '')
-        self.__write(('PRIVMSG', safe(recipient)), safe(text))
+        self.write(("PRIVMSG", recipient), text)
         self.stack.append((time.time(), text))
         self.stack = self.stack[-10:]
 
         self.sending.release()
 
     def notice(self, dest, text):
-        self.write(('NOTICE', dest), text)
+        self.write(("NOTICE", dest), text)
 
 
 class TestBot(Bot):
@@ -195,7 +192,7 @@ class TestBot(Bot):
 
 
 def main():
-    print __doc__
+    print(__doc__)
 
 
 if __name__ == "__main__":

@@ -8,6 +8,7 @@ def print_resp(msg):
 
 
 TestOrigin = namedtuple('TestOrigin', ['sender', 'nick'])
+TestOrigin.__test__ = False
 
 
 def bot_input(bot, msg):
@@ -35,6 +36,7 @@ def set_clock(now_mock, hours=0, minutes=0):
 
 
 class TestTofbot(Tofbot):
+    __test__ = False
 
     def __init__(self, nick, name, chan, origin):
         chans = [chan]
@@ -85,8 +87,8 @@ class TofbotTestCase(unittest.TestCase):
         """
         Find an event of a given class in cron.
         """
-        return ((k, v) for (k, v) in enumerate(self.bot.cron.events)
-                if isinstance(v, clz)).next()
+        return next((k, v) for (k, v) in enumerate(self.bot.cron.events)
+                if isinstance(v, clz))
 
     def _delete_event(self, key):
         del self.bot.cron.events[key]

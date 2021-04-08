@@ -32,8 +32,8 @@ class TimeSlice():
                                              self.hour + 1 % 24,
                                              self.count)
 
-    def __cmp__(self, other):
-        return cmp((self.date, self.hour), (other.date, other.hour))
+    def __eq__(self, other):
+        return (self.date == other.date) and (self.hour == other.hour)
 
     def __hash__(self):
         return hash(self.date) + hash(self.hour)
@@ -50,7 +50,7 @@ class PluginLolrate(Plugin):
 
     def __init__(self, bot):
         Plugin.__init__(self, bot)
-        self.lol_rate = [TimeSlice()]
+        self.lol_rate = []
         bot._mutable_attributes['lolRateDepth'] = int
 
     def handle_msg(self, msg_text, _chan, nick):
@@ -62,7 +62,7 @@ class PluginLolrate(Plugin):
         lulz = len(re.findall(lol_regexp, msg_text, flags=re.IGNORECASE))
         if lulz > 0 and not msg_text.startswith('!'):
             current_ts = TimeSlice()
-            if current_ts != self.lol_rate[0]:
+            if (len(self.lol_rate) == 0) or (current_ts != self.lol_rate[0]):
                 self.lol_rate.insert(0, current_ts)
 
             if len(self.lol_rate) > self.bot.lolRateDepth:
@@ -80,7 +80,7 @@ class PluginLolrate(Plugin):
     def compute_kevin(self):
         kevins = dict()
         for lolade in self.lol_rate:
-            for kevin in lolade.kevins.iteritems():
+            for kevin in lolade.kevins.items():
                 kevins.setdefault(kevin[0], 0)
                 kevins[kevin[0]] += kevin[1]
 

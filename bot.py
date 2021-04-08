@@ -108,7 +108,7 @@ class Tofbot(Bot):
             plugin = getattr(plugins, m)
             for n in dir(plugin):
                 c = getattr(plugin, n)
-                if type(c) not in [types.ClassType, types.TypeType]:
+                if type(c) not in [type]:
                     continue
                 name = c.__name__
                 if name.startswith('Plugin'):
@@ -210,7 +210,7 @@ class Tofbot(Bot):
             self.log('Unknown command type : %s' % command_type)
 
     def find_cmd_action(self, cmd_name):
-        targets = self.plugins.values()
+        targets = list(self.plugins.values())
         targets.insert(0, self)
 
         for t in targets:
@@ -255,7 +255,7 @@ class Tofbot(Bot):
                     except KeyError:
                         pass
         except IOError as e:
-            print "Can't load state. Error: ", e
+            print("Can't load state. Error: {0}".format(e))
 
     def save(self, filename):
         try:
@@ -266,7 +266,7 @@ class Tofbot(Bot):
                     state['plugins'][name] = plugin_state
                 json.dump(state, indent=4, fp=f)
         except IOError as e:
-            print "Can't save state. Error: ", e
+            print("Can't save state. Error: {0}".format(e))
 
 
 def kill_if_disconnected(bot, timeout):
