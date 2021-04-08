@@ -10,35 +10,30 @@
 from bs4 import BeautifulSoup
 import requests
 import re
+from urlparse import urlparse
 
 from toflib import Plugin
 
-DOMAINS = ["t.co/", "tinyurl.com/", "bit.ly/"]
+SHORTEN_NETLOCS = ["t.co", "tinyurl.com", "bit.ly", "www.bit.ly"]
 
-VIDEO_DOMAINS = ["youtube", "youtu.be"]
+YOUTUBE_NETLOCS = ["youtube.com", "www.youtube.com", "youtu.be"]
 
 
 def is_mini(url):
-    for d in DOMAINS:
-        if d in url:
-            return True
-    return False
+    return url.netloc in SHORTEN_NETLOCS
 
 
-def is_video(url):
-    for d in VIDEO_DOMAINS:
-        if d in url:
-            return True
-    return False
+def is_youtube(url):
+    return url.netloc in YOUTUBE_NETLOCS
 
 
-def urlExpand(url):
-    r = requests.get(url)
+def urlExpand(url, cookies=dict()):
+    r = requests.get(url, cookies=cookies)
     return r.url
 
 
-def getTitle(url):
-    r = requests.get(url)
+def getTitle(url, cookies=dict()):
+    r = requests.get(url, cookies=cookies)
     c = r.content
     s = BeautifulSoup(c, "html.parser")
     t = s.html.head.title.string
@@ -48,16 +43,28 @@ def getTitle(url):
 class PluginExpand(Plugin):
 
     def on_url(self, url):
-        if is_mini(url):
+        cookies = dict()
+        u = urlparse(url)
+
+        # prepare cookies
+        if is_youtube(u):
+            consent = None
+            r = requests.head(url)
+            if 'CONSENT' in r.cookies:
+                consent = r.cookies['CONSENT']
+                if 'PENDING' in consent:
+                    cookies['CONSENT'] = 'YES+cb.20210328-17-p0.en+FX+100'
+
+        if is_mini(u):
             try:
-                exp = urlExpand(url)
+                exp = urlExpand(url, cookies)
                 self.say(exp)
             except (requests.exceptions.RequestException, requests):
                 pass
 
-        if is_video(url):
+        if is_youtube(u):
             try:
-                t = getTitle(url)
+                t = getTitle(url, cookies)
                 self.say(t)
             except (requests.exceptions.RequestException, AttributeError):
                 pass

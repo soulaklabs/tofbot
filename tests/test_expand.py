@@ -25,6 +25,7 @@ class TestExpand(TofbotTestCase):
         url = 'https://www.youtube.com/watch?v=J---aiyznGQ'
         title = 'Keyboard cat'
         response = '<html><head><title>%s</title></head></html>' % title
+        HTTPretty.register_uri(HTTPretty.HEAD, url)
         HTTPretty.register_uri(HTTPretty.GET, url,
                                body=response,
                                )
@@ -37,6 +38,7 @@ class TestExpand(TofbotTestCase):
         """
         url = 'https://www.youtube.com/watch?v=J---aiyznGQ'
         HTTPretty.register_uri(HTTPretty.GET, url, body='', )
+        HTTPretty.register_uri(HTTPretty.HEAD, url)
         self.assertOutputLength("Check out %s" % url, 0)
 
     @httprettified
