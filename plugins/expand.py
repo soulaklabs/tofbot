@@ -10,7 +10,7 @@
 from bs4 import BeautifulSoup
 import requests
 import re
-from urllib.parse import urlparse
+from urlparse import urlparse
 
 from toflib import Plugin
 
