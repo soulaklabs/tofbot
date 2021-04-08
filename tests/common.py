@@ -4,7 +4,7 @@ from collections import namedtuple
 
 
 def print_resp(msg):
-    print (" -> %s" % msg)
+    print(" -> %s" % msg)
 
 
 TestOrigin = namedtuple('TestOrigin', ['sender', 'nick'])
@@ -57,7 +57,7 @@ class TestTofbot(Tofbot):
         Send a message to the bot.
         origin is a string that overrides the sender's nick.
         """
-        print ("<-  %s" % msg)
+        print("<-  %s" % msg)
         if origin is None:
             origin = self.origin
         else:
@@ -88,7 +88,7 @@ class TofbotTestCase(unittest.TestCase):
         Find an event of a given class in cron.
         """
         return next((k, v) for (k, v) in enumerate(self.bot.cron.events)
-                if isinstance(v, clz))
+                    if isinstance(v, clz))
 
     def _delete_event(self, key):
         del self.bot.cron.events[key]

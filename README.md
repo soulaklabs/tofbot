@@ -23,6 +23,10 @@ Launch with Python 3:
     pip install -r requirements.txt
     python bot.py
 
+Check code-style:
+
+    pycodestyle --exclude=tofdata .
+
 Test with Python 3:
 
     python -m pytest

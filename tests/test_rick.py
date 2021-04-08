@@ -12,4 +12,4 @@ class TestRick(TofbotTestCase):
         HTTPretty.register_uri(HTTPretty.GET, url, body=response)
         HTTPretty.register_uri(HTTPretty.HEAD, url)
         self.assertOutputContains("Keyboard cat v2: %s" % url,
-                          ["We're no strangers to love...", title])
+                                  ["We're no strangers to love...", title])

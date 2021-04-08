@@ -55,7 +55,6 @@ class PluginExpand(Plugin):
                 if 'PENDING' in consent:
                     cookies['CONSENT'] = 'YES+cb.20210328-17-p0.en+FX+100'
 
-
         if is_mini(u):
             try:
                 exp = urlExpand(url, cookies)

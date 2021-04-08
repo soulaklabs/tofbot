@@ -9,6 +9,7 @@
 from toflib import Plugin
 import time
 
+
 class PluginDonnezmoi(Plugin):
     "A 'gimme a xxx' banner generator plugin"
 

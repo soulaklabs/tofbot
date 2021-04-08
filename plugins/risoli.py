@@ -27,7 +27,7 @@ class Game(object):
     def end(self, leave_time):
         def ok(dt):
             return dt <= leave_time
-        ok_bets = [(nick,dt) for nick,dt in self._bets.items() if ok(dt)]
+        ok_bets = [(nick, dt) for nick, dt in self._bets.items() if ok(dt)]
         if ok_bets:
             winner_bet = max(ok_bets, key=itemgetter(1))
             return winner_bet[0]

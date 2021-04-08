@@ -60,9 +60,11 @@ class Bot(asynchat.async_chat):
             data = b""
             if text is not None:
                 # 510 because CR and LF count too, as nyuszika7h points out
-                data = bytes((" ".join(args) + " :" + text)[:510] + "\r\n",encoding='utf8')
+                data = bytes((" ".join(args) + " :" + text)[:510] + "\r\n",
+                             encoding='utf8')
             else:
-                data = bytes((" ".join(args)[:510] + "\r\n"),encoding='utf8')
+                data = bytes((" ".join(args)[:510] + "\r\n"),
+                             encoding='utf8')
             self.push(data)
         except Exception as e:
             print("Error: {0}".format(e), file=sys.stderr)
@@ -81,7 +83,8 @@ class Bot(asynchat.async_chat):
             text = safe(text)
             self.__write(args, text)
         except Exception as e:
-            print("Error in safe({0},{1}): {2}".format(args,text,e), file=sys.stderr)
+            print("Error in safe({0},{1}): {2}".format(args, text, e),
+                  file=sys.stderr)
             print(traceback.format_exc(), file=sys.stderr)
 
     def run(self, host, port=6667):
@@ -89,7 +92,8 @@ class Bot(asynchat.async_chat):
 
     def initiate_connect(self, host, port):
         if self.verbose:
-            print('Connecting to {0}:{1}...'.format(host, port), file=sys.stderr)
+            print('Connecting to {0}:{1}...'.format(host, port),
+                  file=sys.stderr)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect((host, port))
         try:
@@ -114,7 +118,7 @@ class Bot(asynchat.async_chat):
             raise
         except (KeyboardInterrupt, SystemExit, asyncore.ExitNow):
             raise
-        except:
+        except Exception:
             print(traceback.format_exc(), file=sys.stderr)
         self.close()
 
