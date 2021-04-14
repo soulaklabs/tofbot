@@ -48,5 +48,5 @@ chuckNorrisFacts = [
 if __name__ == "__main__":
     from bot import InnocentHand
     facts = InnocentHand(chuckNorrisFacts)
-    print facts()
-    print facts(1)
+    print(facts())
+    print(facts(1))

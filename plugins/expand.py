@@ -10,7 +10,7 @@
 from bs4 import BeautifulSoup
 import requests
 import re
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 from toflib import Plugin
 
@@ -59,7 +59,7 @@ class PluginExpand(Plugin):
             try:
                 exp = urlExpand(url, cookies)
                 self.say(exp)
-            except (requests.exceptions.RequestException, requests):
+            except requests.exceptions.RequestException:
                 pass
 
         if is_youtube(u):

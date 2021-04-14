@@ -2761,5 +2761,5 @@ fortunes = [
 if __name__ == "__main__":
     from bot import InnocentHand
     joker = InnocentHand(fortunes)
-    print joker()
-    print joker(1)
+    print(joker())
+    print(joker(1))

@@ -11,13 +11,13 @@ import smtplib
 import os
 import time
 import hashlib
-from email import Charset
-from email import Header
+from email.charset import Charset
+from email.header import Header
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.header import Header
 from email.generator import Generator
-from cStringIO import StringIO
+from io import StringIO
 from toflib import Plugin, cmd, InnocentHand
 
 

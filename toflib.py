@@ -40,8 +40,8 @@ def distance(string1, string2):
     Levenshtein distance
     http://en.wikibooks.org/wiki/Algorithm_implementation/Strings/Levenshtein_distance#Python
     """
-    string1 = ' ' + unidecode.unidecode(string1.decode("utf-8"))
-    string2 = ' ' + unidecode.unidecode(string2.decode("utf-8"))
+    string1 = ' ' + unidecode.unidecode(string1)
+    string2 = ' ' + unidecode.unidecode(string2)
     dists = {}
     len1 = len(string1)
     len2 = len(string2)
@@ -185,8 +185,7 @@ class Cron:
 # http://daringfireball.net/2010/07/improved_regex_for_matching_urls
 # Public Domain
 RE_URL = re.compile(
-   r"""
-    (?xi)
+   r"""(?xi)
     \b
     (                           # Capture 1: entire matched URL
       (?:

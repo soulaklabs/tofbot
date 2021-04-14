@@ -8,7 +8,7 @@
 "See PluginLisp"
 from toflib import Plugin, cmd
 import random
-from lis import *
+from . lis import *
 
 
 class PluginLisp(Plugin):
@@ -23,6 +23,6 @@ class PluginLisp(Plugin):
             s = lispstr(val)
             self.say(" => " + s)
 #           self.private(sender_nick, " => " + s)
-        except Exception, err:
+        except Exception as err:
             self.say("Syntax error: " + str(err))
 #           self.private(sender_nick, "Syntax error: " + str(err))

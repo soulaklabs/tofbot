@@ -28,7 +28,7 @@ class PluginDassin(Plugin):
 
     def handle_msg(self, msg_text, chan, nick):
 
-        searched = unidecode.unidecode(msg_text.decode("utf-8")).lower()
+        searched = unidecode.unidecode(msg_text).lower()
         minDist = 9999999
         best = ""
 

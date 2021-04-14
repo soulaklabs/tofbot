@@ -18,7 +18,20 @@ The bot reads its configuration from the environment. Relevant variables:
     TOFBOT_DEBUG    -                       -
     TOFBOT_TIMEOUT  240                     Exit if server does not ping
 
-Launch with Python 2:
+Launch with Python 3:
 
     pip install -r requirements.txt
     python bot.py
+
+Check code-style:
+
+    pycodestyle --exclude=tofdata .
+
+Test with Python 3:
+
+    python -m pytest
+
+Test coverage:
+
+    coverage python3 -m pytest
+    coverage report
