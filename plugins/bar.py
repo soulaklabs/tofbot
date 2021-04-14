@@ -74,7 +74,7 @@ class PluginBar(Plugin):
         if sender_nick == "Pebz":
             self.say(u"random bar! : Dr D")
         else:
-            random_bar = self.liste_bar.keys()
+            random_bar = list(self.liste_bar.keys())
             selection = InnocentHand(random_bar)
             self.say(u"random bar! : " + selection())
 
