@@ -96,7 +96,7 @@ class InnocentHand(object):
     from a given pool of candidates
     """
 
-    def __init__(self, pool:list):
+    def __init__(self, pool: list):
         """
         pool: list of candidates
         """
