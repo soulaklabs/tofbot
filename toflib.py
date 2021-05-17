@@ -189,7 +189,7 @@ RE_URL = re.compile(
     \b
     (                           # Capture 1: entire matched URL
       (?:
-        [a-z][\w-]+:                # URL protocol and colon
+        https?:                     # URL protocol and colon
         (?:
           /{1,3}                        # 1-3 slashes
           |                             #   or
