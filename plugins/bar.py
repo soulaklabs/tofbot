@@ -40,8 +40,6 @@ class PluginBar(Plugin):
                          u'payetabière',
                          u'paietabière',
                          u'paietabiere'],
-                     u"Le Bahaus": [u'bahaus',
-                                    u"lebauhaus"],
                      u"La Bobine": [
                          u'bob',
                          u'bobine',
@@ -52,6 +50,9 @@ class PluginBar(Plugin):
                          u'lecafédunord',
                          u'cafedunord',
                          u'cafédunord'],
+                     u"Le Square": [
+                         u"lesquare",
+                         u"square"],
                      }
         self.liste_bar = liste_bar
         self.liste_grelakins = ("df8aa692a608e3feb1e543"
