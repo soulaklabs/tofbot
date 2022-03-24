@@ -54,6 +54,8 @@ class PluginJokes(Plugin):
         stripped = msg_text.strip().lower()
         if stripped.find(self.bot.nick, 1) >= 0 and self.tofade_time():
             self.say(nick + ": Ouais, c'est moi !")
+        if stripped.find("toughbot", 1) >= 0 and self.tofade_time():
+            self.say(nick + ": Je suis balèze ! BALÈZE !")
         if self.active_riddle():
             itsOver = self.devinette.wait_answer(chan, msg_text)
             if itsOver:
