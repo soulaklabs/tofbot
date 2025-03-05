@@ -183,18 +183,6 @@ class Bot(asynchat.async_chat):
         self.write(("NOTICE", dest), text)
 
 
-class TestBot(Bot):
-    def f_ping(self, origin, match, args):
-        delay = m.group(1)
-        if delay is not None:
-            import time
-            time.sleep(int(delay))
-            self.msg(origin.sender, 'pong (%s)' % delay)
-        else:
-            self.msg(origin.sender, 'pong')
-    f_ping.rule = r'^\.ping(?:[ \t]+(\d+))?$'
-
-
 def main():
     print(__doc__)
 
