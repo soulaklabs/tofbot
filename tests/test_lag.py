@@ -1,15 +1,11 @@
-# -*- coding: utf-8 -*-
-
-from common import TofbotTestCase, set_clock, bot_kick
-from mock import patch
+from common import TofbotTestCase
 
 
 class TestLag(TofbotTestCase):
+    async def test_unknown_nick(self):
+        await self.assertOutput("!lag kevin", "Pas d'infos sur kevin.")
+        await self.assertOutput("!mentions kevin", "Pas d'infos sur kevin.")
 
-    def test_unknown_nick(self):
-        self.assertOutput('!lag kevin', "Pas d'infos sur kevin.")
-        self.assertOutput('!mentions kevin', "Pas d'infos sur kevin.")
-
-    def test_no_lag(self):
-        self.bot.send('hello!', origin='kevin')
-        self.assertOutput('!lag kevin', "Pas de lag pour kevin.")
+    async def test_no_lag(self):
+        await self.bot.send("hello!", origin="kevin")
+        await self.assertOutput("!lag kevin", "Pas de lag pour kevin.")

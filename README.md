@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/soulaklabs/tofbot.svg)](https://travis-ci.org/soulaklabs/tofbot)
-
 This is tofbot
 ==============
+
+"oh, don't ask why"
 
 Configure and run
 -----------------
@@ -18,18 +18,17 @@ The bot reads its configuration from the environment. Relevant variables:
     TOFBOT_DEBUG    -                       -
     TOFBOT_TIMEOUT  240                     Exit if server does not ping
 
-Launch with Python 3:
+Launch:
 
-    pip install -r requirements.txt
+    pip install .
     python bot.py
 
-Check code-style:
+Check code-style, test, profit:
 
-    pycodestyle --exclude=tofdata .
-
-Test with Python 3:
-
-    python -m pytest
+    pip install -e .[test]
+    ruff format
+    ruff check
+    pytest
 
 Test coverage:
 
