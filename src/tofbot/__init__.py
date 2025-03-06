@@ -57,7 +57,7 @@ class Tofbot(Bot):
     _mutable_attributes = {"TGtime": int, "memoryDepth": int}
 
     def __init__(self, nick=None, name=None, channels=None, password=None, debug=True):
-        Bot.__init__(self, nick, name, channels, password)
+        Bot.__init__(self, nick, nick, channels, password)
         self.joined = False
         self.autoTofadeThreshold = 98
         self.riddleMaxDist = 2
@@ -91,13 +91,13 @@ class Tofbot(Bot):
                     instance = attr(self)
                     plugin_name = attr_name[6:].lower()
                     plugin_instances[plugin_name] = instance
-                    
+
         return plugin_instances
 
     # line-feed-safe
     async def msg(self, chan, msg):
         for m in msg.split("\n"):
-            await super().msg(self, chan, m)
+            await super().msg(chan, m)
 
     def log(self, msg):
         if self.verbose:
@@ -268,11 +268,10 @@ def main():
     chan = os.getenv("TOFBOT_CHAN", "#soulakdev").split(",")
     nick = os.getenv("TOFBOT_NICK", "tofbotdev")
     password = os.getenv("TOFBOT_PASSWD", None)
-    name = os.getenv("TOFBOT_NAME", "tofbotdev")
     debug = bool(os.getenv("TOFBOT_DEBUG", ""))
     timeout = int(os.getenv("TOFBOT_TIMEOUT", "240"))
 
-    b = Tofbot(nick, name, chan, password, debug)
+    b = Tofbot(nick=nick, channels=chan, password=password, debug=debug)
 
     # Restore serialized data
     state_file = "state.json"

@@ -112,7 +112,7 @@ class Bot:
 
                 args = argstr.split()
                 origin = Origin(self, source, args)
-                self.dispatch(origin, tuple([text] + args))
+                await self.dispatch(origin, tuple([text] + args))
 
                 if args[0] == "PING":
                     await self.write(("PONG", text))
