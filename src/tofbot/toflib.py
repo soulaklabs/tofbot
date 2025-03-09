@@ -34,29 +34,29 @@ def cmd(nargs_min, nargs_max=None):
     return deco
 
 
-def distance(string1, string2):
+def distance(s1, s2):
     """
     Levenshtein distance
     http://en.wikibooks.org/wiki/Algorithm_implementation/Strings/Levenshtein_distance#Python
     """
-    string1 = " " + string1
-    string2 = " " + string2
-    dists = {}
-    len1 = len(string1)
-    len2 = len(string2)
-    for i in range(len1):
-        dists[i, 0] = i
-    for j in range(len2):
-        dists[0, j] = j
-    for j in range(1, len2):
-        for i in range(1, len1):
-            if string1[i] == string2[j]:
-                dists[i, j] = dists[i - 1, j - 1]
-            else:
-                dists[i, j] = min(
-                    dists[i - 1, j] + 1, dists[i, j - 1] + 1, dists[i - 1, j - 1] + 1
-                )
-    return dists[len1 - 1, len2 - 1]
+    if len(s1) < len(s2):
+        return distance(s2, s1)
+
+    # len(s1) >= len(s2)
+    if len(s2) == 0:
+        return len(s1)
+
+    previous_row = range(len(s2) + 1)
+    for i, c1 in enumerate(s1):
+        current_row = [i + 1]
+        for j, c2 in enumerate(s2):
+            insertions = previous_row[j + 1] + 1 # j+1 instead of j since previous_row and current_row are one character longer
+            deletions = current_row[j] + 1       # than s2
+            substitutions = previous_row[j] + (c1 != c2)
+            current_row.append(min(insertions, deletions, substitutions))
+        previous_row = current_row
+
+    return previous_row[-1]
 
 
 class RiddleTeller(object):
